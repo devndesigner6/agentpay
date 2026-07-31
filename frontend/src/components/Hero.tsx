@@ -69,6 +69,12 @@ export default function Hero() {
     } catch (error: any) {
       if (error.response && error.response.status === 402) {
         const payReq = readPaymentRequiredResponse(error.response.data, error.response.headers['payment-required'])
+        const rejectionReason = typeof payReq.error === 'string' ? payReq.error : ''
+        if (paymentHeaders && rejectionReason && rejectionReason !== 'Payment required') {
+          addLog(`❌ Facilitator rejected the signed payment: ${rejectionReason}`)
+          setPaymentStep('error')
+          return
+        }
         addLog(`⚠️ HTTP 402: Payment Required!`)
         addLog(`Price: ${String(payReq.price || 'unknown')} USDC | Payee: ${String(payReq.payTo || 'unknown').substring(0, 12)}...`)
         

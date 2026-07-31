@@ -85,6 +85,16 @@ export default function ChatPage() {
     } catch (error: any) {
       if (error.response && error.response.status === 402) {
         const payReq = readPaymentRequiredResponse(error.response.data, error.response.headers['payment-required'])
+        const rejectionReason = typeof payReq.error === 'string' ? payReq.error : ''
+        if (paymentHeaders && rejectionReason && rejectionReason !== 'Payment required') {
+          setPaymentStep('idle')
+          addChatMessage({
+            id: Math.random().toString(),
+            role: 'assistant',
+            content: `Payment rejected by the facilitator: ${rejectionReason}`,
+          })
+          return
+        }
         setPaymentRequirements(payReq)
         setPaymentStep('required')
       } else {
