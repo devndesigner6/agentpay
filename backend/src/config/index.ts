@@ -4,10 +4,15 @@ dotenv.config()
 
 const network = process.env.ALGORAND_NETWORK || 'testnet'
 const defaultUsdcAssetId = network === 'mainnet' ? '31566704' : '10458941'
+const allowedOrigins = (process.env.FRONTEND_URL || '').split(',').map(value => value.trim()).filter(Boolean)
 
 export const config = {
   port: parseInt(process.env.PORT || '3000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
+
+  web: {
+    allowedOrigins,
+  },
 
   algorand: {
     network,

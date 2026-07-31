@@ -10,7 +10,7 @@ export default function PricingPage() {
       name: 'Pay-As-You-Go',
       price: '$0.03',
       description: 'Agent-native, pay per request. Settle directly with x402 USDC micropayments.',
-      features: ['Real Pera Wallet integrations', 'Algorand MainNet transaction records', 'No monthly subscriptions', 'Priority provider routing fallback', 'Unlimited prompt requests volume'],
+      features: ['Pera Wallet integration', 'Testnet/Mainnet-ready receipt flow', 'No monthly subscriptions', 'Priority provider routing fallback', 'Usage-based routing'],
       active: true
     },
     {

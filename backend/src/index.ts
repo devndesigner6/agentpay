@@ -10,7 +10,10 @@ import { initializeX402 } from './payments/x402_client.js'
 const app = express()
 
 // Middleware
-app.use(cors())
+app.use(cors({
+  origin: config.web.allowedOrigins.length ? config.web.allowedOrigins : true,
+  exposedHeaders: ['PAYMENT-RESPONSE', 'X-PAYMENT-RESPONSE'],
+}))
 app.use(express.json())
 
 // Health check

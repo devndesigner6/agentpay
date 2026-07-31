@@ -3,6 +3,8 @@ import axios from 'axios'
 import { useStore } from '../hooks/useStore.js'
 import { API_BASE_URL } from '../config.js'
 import { createPeraPaymentHeaders, normalizePaymentRequired } from '../utils/x402.js'
+import { NETWORK_LABEL } from '../config.js'
+import { decodePaymentResponseHeader } from '@x402-avm/core/http'
 
 export default function Hero() {
   const { connectedWallet, connectWallet, peraWallet, fetchStats } = useStore()
@@ -53,9 +55,13 @@ export default function Hero() {
 
       addLog(`✅ HTTP 200: Successfully routed to ${res.data.provider}!`)
       addLog(`Latency: ${res.data.latency_ms}ms | Cost: ${res.data.price_paid}`)
-      addLog(`Tx Hash: ${res.data.payment_tx.substring(0, 16)}...`)
       
-      setResponse(res.data)
+      const paymentResponse = res.headers['payment-response']
+      const inboundTransaction = paymentResponse ? decodePaymentResponseHeader(paymentResponse).transaction : res.data.payment_tx
+      const completedResponse = { ...res.data, payment_tx: inboundTransaction }
+      addLog(`Inbound settlement: ${inboundTransaction.substring(0, 16)}...`)
+      addLog(`Provider settlement: ${completedResponse.provider_payment_tx?.substring(0, 16) || 'pending'}...`)
+      setResponse(completedResponse)
       setPaymentStep('completed')
       
       // Update stats dashboard
@@ -86,7 +92,7 @@ export default function Hero() {
 
     setPaymentStep('signing')
     addLog(`Invoking Pera Wallet...`)
-    addLog(`Constructing real USDC transfer transaction on Algorand...`)
+    addLog(`Constructing x402 payment on Algorand ${NETWORK_LABEL}...`)
 
     try {
       addLog(`Requesting user signature for transaction...`)
@@ -264,7 +270,7 @@ response = client.chat.completions.create(
                   className="v5-select w-full bg-white text-xs text-[#111] focus:outline-none"
                 >
                   <option value="cheapest">Llama 3.2 (3B) - $0.005</option>
-                  <option value="balanced">Mistral 7B - $0.010</option>
+                  <option value="reliable">Most Reliable Route</option>
                   <option value="fastest">Gemini 2 Flash - $0.020</option>
                   <option value="reliable">Most Reliable (High Success Rate)</option>
                 </select>
@@ -368,7 +374,7 @@ response = client.chat.completions.create(
                 onClick={() => handleWalletSelect('pera')}
                 className="w-full py-3 px-4 bg-[#fafafa] border border-[#eaeaea] hover:bg-[#f5f5f5] text-[#111] text-xs font-semibold rounded-xl flex items-center justify-between transition-all"
               >
-                <span>Pera Wallet (Algorand Mainnet)</span>
+                <span>Pera Wallet (Algorand {NETWORK_LABEL})</span>
                 <span className="v5-badge v5-badge-warning text-[9px] uppercase font-bold">Real</span>
               </button>
             </div>

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useStore } from '../hooks/useStore.js'
+import { NETWORK_LABEL } from '../config.js'
 
 export default function Header() {
   const { connectedWallet, connectWallet, disconnectWallet, activePage, setPage } = useStore()
@@ -21,15 +22,7 @@ export default function Header() {
       {bannerVisible && (
         <div className="w-full bg-[#0047ff] text-white text-xs py-2.5 px-6 flex items-center justify-between transition-all select-none">
           <div className="flex-1 text-center font-medium">
-            🚀 <strong>AgentPay</strong> is live on Algorand MainNet for the x402 Global Challenge!{' '}
-            <a
-              href="https://algorand.co/blog/the-x402-global-challenge-is-live-how-to-build-submit-your-entry"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-blue-100 ml-1 font-semibold"
-            >
-              See challenge guidelines
-            </a>
+            <strong>AgentPay</strong> is configured for Algorand {NETWORK_LABEL}. Complete a verified x402 payment before calling it live.
           </div>
           <button
             onClick={() => setBannerVisible(false)}

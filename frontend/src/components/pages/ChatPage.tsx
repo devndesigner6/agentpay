@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useStore } from '../../hooks/useStore.js'
 import { API_BASE_URL } from '../../config.js'
 import { createPeraPaymentHeaders, normalizePaymentRequired } from '../../utils/x402.js'
+import { NETWORK_LABEL } from '../../config.js'
 
 export default function ChatPage() {
   const {
@@ -350,7 +351,7 @@ export default function ChatPage() {
                 onClick={() => handleWalletSelect('pera')}
                 className="w-full py-3 px-4 bg-[#fafafa] border border-[#eaeaea] hover:bg-[#f5f5f5] text-[#111] text-xs font-semibold rounded-xl flex items-center justify-between transition-all"
               >
-                <span>Pera Wallet (Algorand Mainnet)</span>
+                <span>Pera Wallet (Algorand {NETWORK_LABEL})</span>
                 <span className="v5-badge v5-badge-warning text-[9px] uppercase font-bold">Real</span>
               </button>
             </div>
