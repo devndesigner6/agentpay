@@ -16,14 +16,15 @@ import { useStore } from './hooks/useStore.js'
 
 function App() {
   const { reconnectWallet, activePage } = useStore()
+  const isWorkspace = activePage === 'console'
 
   useEffect(() => {
     reconnectWallet()
   }, [reconnectWallet])
 
   return (
-    <div className="min-h-screen landing-page theme-v5 bg-[#fafafa] text-[#111] font-sans">
-      <Header />
+    <div className={`min-h-screen theme-v5 text-[#111] font-sans ${isWorkspace ? 'bg-white' : 'landing-page bg-[#fafafa]'}`}>
+      {!isWorkspace && <Header />}
       <main>
         {activePage === 'home' && (
           <>
@@ -38,7 +39,7 @@ function App() {
         {activePage === 'pricing' && <PricingPage />}
         {activePage === 'docs' && <DocsPage />}
       </main>
-      <Footer />
+      {!isWorkspace && <Footer />}
     </div>
   )
 }

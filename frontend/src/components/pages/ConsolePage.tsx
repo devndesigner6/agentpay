@@ -21,7 +21,7 @@ interface TransactionRecord {
 }
 
 export default function ConsolePage() {
-  const { stats, fetchStats } = useStore()
+  const { stats, fetchStats, connectedWallet, setPage } = useStore()
   const [activeTab, setActiveTab] = useState<'overview' | 'keys' | 'policies' | 'logs'>('overview')
   
   // Local state for generated API keys
@@ -67,40 +67,39 @@ export default function ConsolePage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12 font-sans bg-[#fafafa] min-h-[calc(100vh-4rem)] select-none">
-      
-      {/* Console Tab Selector (Alephant visual tabs secondary schema) */}
-      <div className="v5-tabs-secondary mb-10 select-none">
-        <button
-          onClick={() => setActiveTab('overview')}
-          className={`v5-tab-secondary ${activeTab === 'overview' ? 'active' : ''}`}
-        >
-          Console Overview
-        </button>
-        <button
-          onClick={() => setActiveTab('keys')}
-          className={`v5-tab-secondary ${activeTab === 'keys' ? 'active' : ''}`}
-        >
-          API Keys & Wallets
-        </button>
-        <button
-          onClick={() => setActiveTab('policies')}
-          className={`v5-tab-secondary ${activeTab === 'policies' ? 'active' : ''}`}
-        >
-          Guardrail Policies
-        </button>
-        <button
-          onClick={() => setActiveTab('logs')}
-          className={`v5-tab-secondary ${activeTab === 'logs' ? 'active' : ''}`}
-        >
-          Live Run Logs
-        </button>
-      </div>
+    <div className="agentpay-workspace select-none">
+      <aside className="agentpay-sidebar">
+        <button onClick={() => setPage('home')} className="agentpay-wordmark"><span>◼</span> AgentPay <small>• Testnet</small></button>
+        <div className="agentpay-search">⌕ <span>Search...</span><kbd>Ctrl K</kbd></div>
+        <div className="agentpay-nav-label">WORKSPACE</div>
+        <button onClick={() => setActiveTab('overview')} className={`agentpay-nav ${activeTab === 'overview' ? 'active' : ''}`}>▦ Finance</button>
+        <button onClick={() => setPage('chat')} className="agentpay-nav">◉ Agent Gateway</button>
+        <button onClick={() => setActiveTab('keys')} className={`agentpay-nav ${activeTab === 'keys' ? 'active' : ''}`}>ϟ Agents</button>
+        <button onClick={() => setPage('models')} className="agentpay-nav">◇ Models</button>
+        <div className="agentpay-nav-label mt-6">OPERATIONS</div>
+        <button onClick={() => setActiveTab('logs')} className={`agentpay-nav ${activeTab === 'logs' ? 'active' : ''}`}>▤ Payments</button>
+        <button onClick={() => setActiveTab('policies')} className={`agentpay-nav ${activeTab === 'policies' ? 'active' : ''}`}>◌ Control</button>
+        <div className="agentpay-sidebar-foot">
+          <span className="agentpay-testnet-dot" /> Algorand Testnet
+          <strong>{connectedWallet ? `${connectedWallet.address.slice(0, 8)}...${connectedWallet.address.slice(-4)}` : 'Wallet not connected'}</strong>
+        </div>
+      </aside>
+
+      <section className="agentpay-workspace-main">
+        <div className="agentpay-workspace-bar"><span>▦ Pro Workspace</span><span>Updated just now ↻</span><button onClick={() => setActiveTab('keys')}>＋ New agent</button></div>
+        <header className="agentpay-page-title">
+          <div><p>AGENT FINANCE</p><h1>{activeTab === 'overview' ? 'Finance' : activeTab === 'keys' ? 'Agents' : activeTab === 'policies' ? 'Control' : 'Payments'}</h1><span>{activeTab === 'overview' ? 'Your x402 settlement revenue, routed spend, and known margin at a glance.' : 'Configure AgentPay for accountable autonomous payments.'}</span></div>
+          {activeTab === 'overview' && <div className="agentpay-range"><button className="active">24h</button><button>30d</button></div>}
+        </header>
 
       {/* Overview View */}
       {activeTab === 'overview' && (
         <div className="space-y-10 animate-fade-in">
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="agentpay-setup-card">
+            <div><p>GETTING STARTED</p><strong>① Complete first x402 settlement</strong><span>Fund your payer and router wallets, then route a paid request through AgentPay.</span></div>
+            <button onClick={() => setPage('chat')}>Open Agent Gateway</button>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
             <div className="v5-card v5-stat-card">
               <span className="v5-stat-label">USDC Volume Routed</span>
               <span className="v5-stat-value block mt-1 font-mono">${stats?.total_usdc_volume || '0.00'}</span>
@@ -324,6 +323,7 @@ export default function ConsolePage() {
         </div>
       )}
 
+      </section>
     </div>
   )
 }
