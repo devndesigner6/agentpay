@@ -12,7 +12,8 @@ const app = express()
 // Middleware
 app.use(cors({
   origin: config.web.allowedOrigins.length ? config.web.allowedOrigins : true,
-  exposedHeaders: ['PAYMENT-RESPONSE', 'X-PAYMENT-RESPONSE'],
+  // Browsers must be allowed to read the x402 challenge and settlement headers.
+  exposedHeaders: ['PAYMENT-REQUIRED', 'PAYMENT-RESPONSE', 'X-PAYMENT-RESPONSE'],
 }))
 app.use(express.json())
 

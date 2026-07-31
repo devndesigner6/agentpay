@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import axios from 'axios'
 import { useStore } from '../../hooks/useStore.js'
 import { API_BASE_URL } from '../../config.js'
-import { createPeraPaymentHeaders, normalizePaymentRequired } from '../../utils/x402.js'
+import { createPeraPaymentHeaders, readPaymentRequiredResponse } from '../../utils/x402.js'
 import { NETWORK_LABEL } from '../../config.js'
 
 export default function ChatPage() {
@@ -84,7 +84,7 @@ export default function ChatPage() {
       fetchStats() // Reload metrics
     } catch (error: any) {
       if (error.response && error.response.status === 402) {
-        const payReq = normalizePaymentRequired(error.response.data)
+        const payReq = readPaymentRequiredResponse(error.response.data, error.response.headers['payment-required'])
         setPaymentRequirements(payReq)
         setPaymentStep('required')
       } else {

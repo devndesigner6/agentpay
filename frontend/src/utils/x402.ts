@@ -5,6 +5,21 @@ import algosdk from 'algosdk'
 
 type PaymentRequiredResponse = Record<string, unknown> & { accepts?: unknown[] }
 
+/**
+ * x402 v2 resource servers return their challenge in PAYMENT-REQUIRED.  The
+ * response body may intentionally be empty, so parse the header before using
+ * the challenge to construct a Pera signing payload.
+ */
+export function readPaymentRequiredResponse(payload: unknown, paymentRequiredHeader?: string): PaymentRequiredResponse {
+  if (!paymentRequiredHeader) return normalizePaymentRequired(payload)
+
+  const client = new x402HTTPClient(new x402Client())
+  return client.getPaymentRequiredResponse(
+    (name) => name.toLowerCase() === 'payment-required' ? paymentRequiredHeader : null,
+    payload,
+  ) as PaymentRequiredResponse
+}
+
 export function normalizePaymentRequired(payload: unknown): PaymentRequiredResponse {
   const root = (payload && typeof payload === 'object' ? payload : {}) as PaymentRequiredResponse
   const paymentRequired = (root.payment_required && typeof root.payment_required === 'object'
