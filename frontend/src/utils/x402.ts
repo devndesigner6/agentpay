@@ -48,7 +48,16 @@ export async function createPeraPaymentHeaders(
         signers: indexes.includes(index) ? [address] : [],
       }))
       const signed = await peraWallet.signTransaction([group])
-      return transactions.map((_, index) => indexes.includes(index) ? signed[index] : null)
+      // Pera filters out transactions it was instructed not to sign. x402's
+      // facilitator fee-payer transaction is intentionally unsigned, so map
+      // the compact Pera response back onto the original transaction indexes.
+      let signedCursor = 0
+      return transactions.map((_, index) => {
+        if (!indexes.includes(index)) return null
+        const signedTransaction = signed[signedCursor++]
+        if (!signedTransaction) throw new Error(`Pera did not return a signature for x402 transaction index ${index}`)
+        return signedTransaction
+      })
     },
   }
   const client = new x402HTTPClient(new x402Client().register('algorand:*', new ExactAvmScheme(signer)))
