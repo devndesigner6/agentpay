@@ -52,6 +52,10 @@ export async function createPeraPaymentHeaders(
     },
   }
   const client = new x402HTTPClient(new x402Client().register('algorand:*', new ExactAvmScheme(signer)))
-  const challenge = client.getPaymentRequiredResponse(() => null, paymentRequired)
-  return client.encodePaymentSignatureHeader(await client.createPaymentPayload(challenge))
+  // paymentRequired is already decoded from the PAYMENT-REQUIRED response
+  // header. Re-parsing it without that header makes the x402 SDK reject it.
+  const paymentPayload = await client.createPaymentPayload(
+    paymentRequired as Parameters<typeof client.createPaymentPayload>[0],
+  )
+  return client.encodePaymentSignatureHeader(paymentPayload)
 }
