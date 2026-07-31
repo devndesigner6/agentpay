@@ -25,22 +25,7 @@ export default function ConsolePage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'keys' | 'policies' | 'logs'>('overview')
   
   // Local state for generated API keys
-  const [keysList, setKeysList] = useState<AgentKey[]>([
-    {
-      id: 'key1',
-      name: 'TraderBot-Alpha',
-      key: 'ap_live_9x81f2h3j4k5l6m7n8o9p0q',
-      wallet: 'KRP3FBLPBLXXJUQTRAMC3YHBCRXQAQNOXZKRSJRIP4H2XCRCULIEC4QYEQ',
-      created: '2026-07-30'
-    },
-    {
-      id: 'key2',
-      name: 'DevAgent-Coder',
-      key: 'ap_live_4a5b6c7d8e9f0g1h2i3j4k',
-      wallet: 'MS6PH2XKFCBCDPWB4RA6K244YRYB243SZIKGZYMLIXVER2AWVGUITYJZQ4',
-      created: '2026-07-31'
-    }
-  ])
+  const [keysList, setKeysList] = useState<AgentKey[]>([])
   
   const [newKeyName, setNewKeyName] = useState('')
   const [newKeyWallet, setNewKeyWallet] = useState('')
@@ -129,8 +114,8 @@ export default function ConsolePage() {
               <span className="v5-stat-value block mt-1 font-mono">{keysList.length}</span>
             </div>
             <div className="v5-card v5-stat-card">
-              <span className="v5-stat-label">Average Response Uptime</span>
-              <span className="v5-stat-value block mt-1 font-mono text-[#16a34a]">99.8%</span>
+              <span className="v5-stat-label">Settlement Status</span>
+              <span className="v5-stat-value block mt-1 font-mono text-[#16a34a]">{(stats?.total_requests || 0) > 0 ? 'ACTIVE' : 'AWAITING FIRST PAYMENT'}</span>
             </div>
           </div>
 
@@ -197,7 +182,7 @@ export default function ConsolePage() {
           {/* Keys List Table */}
           <div className="md:col-span-2 v5-table-wrapper">
             <div className="bg-white px-5 py-4 border-b border-[#eaeaea] flex items-center justify-between">
-              <h4 className="v5-card-title text-xs uppercase tracking-wider">Active Keys</h4>
+              <h4 className="v5-card-title text-xs uppercase tracking-wider">Browser-only Demo Keys</h4>
               <span className="v5-badge v5-badge-neutral text-[10px]">{keysList.length} Total</span>
             </div>
             <div className="overflow-x-auto">

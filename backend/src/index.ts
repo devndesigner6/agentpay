@@ -25,9 +25,10 @@ app.get('/health', (req, res) => {
     network: config.algorand.network,
     x402: {
       facilitator: config.x402.facilitatorUrl,
-      receivingWalletConfigured: Boolean(config.x402.payToAddress),
-      routerWalletConfigured: Boolean(config.router.privateKey),
-      providerWalletsConfigured: Object.values(config.providers).every(provider => Boolean(provider.payToAddress)),
+      receivingWalletConfigured: config.x402.hasValidPayToAddress,
+      routerWalletConfigured: config.router.hasUsablePrivateKey,
+      providerWalletsConfigured: Object.values(config.providers).every(provider => /^[A-Z2-7]{58}$/.test(provider.payToAddress)),
+      realModelProviderConfigured: config.modelProvider.openRouterConfigured,
     },
   })
 })
