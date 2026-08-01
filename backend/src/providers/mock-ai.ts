@@ -4,14 +4,16 @@ export async function generateResponse(prompt: string, providerId: string): Prom
   const apiKey = process.env.OPENROUTER_API_KEY
 
   if (apiKey) {
-    // Map providerId to actual OpenRouter model identifiers
+    // Current OpenRouter free text models (verified against /api/v1/models).
+    // Keep three concrete models so AgentPay's x402 routing policy remains
+    // observable instead of delegating all decisions to another router.
     const models: Record<string, string> = {
-      'cheap-llm': 'meta-llama/llama-3.2-1b-instruct:free',
-      'balanced-ai': 'meta-llama/llama-3.1-8b-instruct:free',
-      'premium-ai': 'google/gemini-2-flash',
+      'cheap-llm': 'poolside/laguna-xs-2.1:free',
+      'balanced-ai': 'google/gemma-4-31b-it:free',
+      'premium-ai': 'nvidia/nemotron-3-ultra-550b-a55b:free',
     }
 
-    const modelName = models[providerId] || 'meta-llama/llama-3.1-8b-instruct:free'
+    const modelName = models[providerId] || 'openrouter/free'
 
     try {
       const response = await axios.post(

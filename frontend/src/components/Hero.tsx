@@ -275,9 +275,9 @@ response = client.chat.completions.create(
                   onChange={(e) => setPrefer(e.target.value)}
                   className="v5-select w-full bg-white text-xs text-[#111] focus:outline-none"
                 >
-                  <option value="cheapest">Llama 3.2 (3B) - $0.005</option>
+                  <option value="cheapest">Laguna XS 2.1 (free) - $0.005</option>
                   <option value="reliable">Most Reliable Route</option>
-                  <option value="fastest">Gemini 2 Flash - $0.020</option>
+                  <option value="fastest">Nemotron 3 Ultra (free) - $0.020</option>
                   <option value="reliable">Most Reliable (High Success Rate)</option>
                 </select>
               </div>

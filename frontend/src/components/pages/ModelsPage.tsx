@@ -9,9 +9,9 @@ export default function ModelsPage() {
   const models = [
     {
       id: 'cheap-llm',
-      name: 'Llama 3.2 (3B)',
-      creator: 'by Meta',
-      description: 'Ultra-lightweight open-source text model, highly optimized for quick responses and basic queries.',
+      name: 'Laguna XS 2.1 (free)',
+      creator: 'by Poolside via OpenRouter',
+      description: 'Current free OpenRouter text model for quick, low-cost prompts.',
       price: '$0.005',
       context: '8,192 tokens',
       modality: 'text',
@@ -20,9 +20,9 @@ export default function ModelsPage() {
     },
     {
       id: 'balanced-ai',
-      name: 'Mistral 7B',
-      creator: 'by Mistral',
-      description: 'Balanced open weight model, suitable for general logic, reasoning, and standard programming tasks.',
+      name: 'Gemma 4 31B (free)',
+      creator: 'by Google via OpenRouter',
+      description: 'Current free OpenRouter model balanced for analysis and programming tasks.',
       price: '$0.010',
       context: '131,072 tokens',
       modality: 'text',
@@ -31,9 +31,9 @@ export default function ModelsPage() {
     },
     {
       id: 'premium-ai',
-      name: 'Gemini 2 Flash',
-      creator: 'by Google',
-      description: 'Multimodal flash model offering premium speed and logic for complex analysis, reasoning, and coding.',
+      name: 'Nemotron 3 Ultra (free)',
+      creator: 'by NVIDIA via OpenRouter',
+      description: 'Current free OpenRouter reasoning route for complex analysis and coding.',
       price: '$0.020',
       context: '131,072 tokens',
       modality: 'text',

@@ -54,8 +54,8 @@ export class ProviderRegistry {
     const providers: Provider[] = [
       {
         id: 'cheap-llm',
-        name: 'Llama 3.2 (3B)',
-        description: 'Cost-effective, low-latency model for simple text and classification tasks.',
+        name: 'Laguna XS 2.1 (free)',
+        description: 'Low-cost OpenRouter text model for fast everyday prompts.',
         pricePerRequest: 0.005,
         averageLatency: 280,
         availability: 0.98,
@@ -64,8 +64,8 @@ export class ProviderRegistry {
       },
       {
         id: 'premium-ai',
-        name: 'Gemini 2 Flash',
-        description: 'Advanced reasoning, rapid speed, multimodal processing, and complex logic.',
+        name: 'Nemotron 3 Ultra (free)',
+        description: 'High-capability OpenRouter reasoning route for complex requests.',
         pricePerRequest: 0.02,
         averageLatency: 180,
         availability: 0.99,
@@ -74,8 +74,8 @@ export class ProviderRegistry {
       },
       {
         id: 'balanced-ai',
-        name: 'Mistral 7B',
-        description: 'Highly capable open-weight model balanced for general logic and analysis.',
+        name: 'Gemma 4 31B (free)',
+        description: 'Balanced OpenRouter text model for analysis and coding tasks.',
         pricePerRequest: 0.01,
         averageLatency: 220,
         availability: 0.97,
