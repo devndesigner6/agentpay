@@ -85,7 +85,7 @@ fetch("https://YOUR_DOMAIN/api/generate", {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 font-sans bg-[#fafafa] min-h-screen">
+      <div className="max-w-4xl mx-auto px-6 py-12 font-sans bg-[#fafafa] min-h-screen">
       
       {/* Header */}
       <div className="mb-10 select-none text-center">
@@ -93,6 +93,11 @@ fetch("https://YOUR_DOMAIN/api/generate", {
           <TextReveal text="API Documentation" className="font-bold text-[#111]" stagger={0.06} maxDuration={1.0} />
         </h1>
         <p className="text-xs text-[#666]">Integrate autonomous AI agents with AgentPay's x402 payment router.</p>
+        <div className="mt-6 v5-card p-5 text-xs leading-relaxed text-slate-600">
+          <h2 className="font-bold text-slate-900 mb-2">How x402 agent routing works</h2>
+          <p>An agent calls AgentPay, receives HTTP 402, signs the requested Algorand USDC payment, and retries with the payment proof. AgentPay applies the selected policy, pays the chosen provider through x402, and returns the model response with settlement metadata.</p>
+          <p className="mt-3">Agent keys identify and constrain callers; they never expose the router mnemonic or provider keys. Use the Console to create an agent, select its preference, and inspect its resulting paid runs.</p>
+        </div>
       </div>
 
       <div className="space-y-8">

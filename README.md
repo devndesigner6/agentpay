@@ -1,6 +1,21 @@
 # AgentPay
 
-AgentPay is an Algorand x402 payment router for AI requests. A client pays AgentPay once; AgentPay selects the best provider by price, latency, or availability, settles the selected provider's own x402 payment, and returns the AI response with both settlement receipts.
+<p align="center"><strong>Open-source x402 payment routing for AI agents on Algorand.</strong><br/>One paid request in, policy-based model routing and on-chain provider settlement out.</p>
+
+<p align="center">
+  <a href="https://agentpay-teal.vercel.app">Live app</a> ·
+  <a href="https://facilitator.goplausible.xyz/docs">Facilitator docs</a> ·
+  <a href="https://facilitator.goplausible.xyz/dashboard/leaderboards">Leaderboard</a> ·
+  <a href="https://dev.algorand.co/resources/x402-on-algorand/">x402 on Algorand</a>
+</p>
+
+## What is AgentPay
+
+AgentPay is an OpenAI-style agent gateway with an x402 payment layer. A payer signs a USDC Testnet payment, AgentPay selects a live OpenRouter model according to its routing policy, settles the chosen provider's own x402 request, and returns the model result plus settlement data. It is designed for agent clients, not only the browser chat demo.
+
+## Project status
+
+AgentPay is a hackathon prototype running on Algorand Testnet. The x402 request and downstream provider-payment flow are live. Agents and API keys are persisted in Neon Postgres; production authentication, durable budgets, and mainnet hardening remain future work.
 
 ## What is implemented
 
