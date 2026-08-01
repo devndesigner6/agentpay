@@ -107,9 +107,24 @@ async function callPaidProvider(url: string, prompt: string): Promise<{ result: 
   })
   if (settled.status < 200 || settled.status >= 300) {
     const body = settled.data
-    const detail = typeof body === 'object' && body
+    let detail = typeof body === 'object' && body
       ? body.message || body.error
       : undefined
+    // A facilitator rejection is returned as another 402. Its reason is
+    // encoded in PAYMENT-REQUIRED, not necessarily in the JSON body.
+    if (!detail && settled.status === 402) {
+      try {
+        const challenge = paymentClient.getPaymentRequiredResponse(
+          name => settled.headers[name.toLowerCase()],
+          settled.data,
+        ) as { error?: unknown; message?: unknown }
+        detail = typeof challenge.error === 'string' ? challenge.error
+          : typeof challenge.message === 'string' ? challenge.message
+            : undefined
+      } catch {
+        // Keep the status-level diagnostic if the challenge itself is malformed.
+      }
+    }
     throw new Error(`Provider payment request failed (HTTP ${settled.status})${detail ? `: ${detail}` : ''}`)
   }
   const receipt = paymentClient.getPaymentSettleResponse(name => settled.headers[name.toLowerCase()])

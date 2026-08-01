@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import algosdk from 'algosdk'
 import { config } from './config/index.js'
 import generateRoutes from './routes/generate.js'
 import statsRoutes from './routes/stats.js'
@@ -8,6 +9,17 @@ import transactionsRoutes from './routes/transactions.js'
 import { initializeX402 } from './payments/x402_client.js'
 
 const app = express()
+
+// Public-only diagnostic: confirms which router account the deployment is
+// actually signing with, without exposing its mnemonic or private key.
+const routerAddress = (() => {
+  try {
+    const words = config.router.privateKey.trim().split(/\s+/).filter(Boolean)
+    return words.length === 25 ? algosdk.mnemonicToSecretKey(config.router.privateKey).addr : undefined
+  } catch {
+    return undefined
+  }
+})()
 
 // Middleware
 app.use(cors({
@@ -27,6 +39,7 @@ app.get('/health', (req, res) => {
       facilitator: config.x402.facilitatorUrl,
       receivingWalletConfigured: config.x402.hasValidPayToAddress,
       routerWalletConfigured: config.router.hasUsablePrivateKey,
+      routerWalletAddress: routerAddress,
       providerWalletsConfigured: Object.values(config.providers).every(provider => /^[A-Z2-7]{58}$/.test(provider.payToAddress)),
       realModelProviderConfigured: config.modelProvider.openRouterConfigured,
     },
