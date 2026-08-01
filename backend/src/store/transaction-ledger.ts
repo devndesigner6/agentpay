@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { db } from './db.js'
 
 export type TransactionRecord = {
   id: string
@@ -36,10 +37,41 @@ function writeRecords(records: TransactionRecord[]) {
 }
 
 export const transactionLedger = {
-  list(limit = 50) {
-    return readRecords().slice(0, Math.min(Math.max(limit, 1), maxRecords))
+  async list(limit = 50): Promise<TransactionRecord[]> {
+    const safeLimit = Math.min(Math.max(limit, 1), maxRecords)
+    if (!db) return readRecords().slice(0, safeLimit)
+
+    const result = await db.query(`
+      select id, created_at as "createdAt", status, provider_id as "providerId",
+        provider_name as "providerName", preference, prompt_preview as "promptPreview",
+        inbound_payment_reference as "inboundPaymentReference",
+        downstream_payment_tx as "downstreamPaymentTx",
+        provider_cost as "providerCost", latency_ms as "latencyMs", error
+      from routing_transactions
+      order by created_at desc
+      limit $1
+    `, [safeLimit])
+    return result.rows.map(row => ({
+      ...row,
+      providerCost: row.providerCost === null ? undefined : Number(row.providerCost),
+      latencyMs: row.latencyMs === null ? undefined : Number(row.latencyMs),
+    })) as TransactionRecord[]
   },
-  append(record: TransactionRecord) {
+  async append(record: TransactionRecord) {
+    if (db) {
+      await db.query(`
+        insert into routing_transactions (
+          id, created_at, status, provider_id, provider_name, preference, prompt_preview,
+          inbound_payment_reference, downstream_payment_tx, provider_cost, latency_ms, error
+        ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      `, [
+        record.id, record.createdAt, record.status, record.providerId ?? null,
+        record.providerName ?? null, record.preference ?? null, record.promptPreview ?? null,
+        record.inboundPaymentReference ?? null, record.downstreamPaymentTx ?? null,
+        record.providerCost ?? null, record.latencyMs ?? null, record.error ?? null,
+      ])
+      return record
+    }
     writeRecords([record, ...readRecords()])
     return record
   },

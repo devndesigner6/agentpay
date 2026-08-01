@@ -168,7 +168,7 @@ router.post('/generate', paymentMiddleware(x402Routes, resourceServer), async (r
       payment_tx: paymentReceiptFromHeader(req.header('x-payment')),
       provider_payment_tx: providerResponse.transaction,
     }
-    transactionLedger.append({
+    await transactionLedger.append({
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
       status: 'success',

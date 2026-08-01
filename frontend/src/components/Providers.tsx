@@ -12,7 +12,7 @@ export default function Providers() {
       price: '$0.005',
       latency: '280ms',
       availability: '98%',
-      logo: '🦙',
+      logo: '/logos/openrouter.svg',
       weeklyTrend: '+12%',
       trendUp: true,
       volume: '154.2M'
@@ -24,7 +24,7 @@ export default function Providers() {
       price: '$0.020',
       latency: '180ms',
       availability: '99%',
-      logo: '✨',
+      logo: '/logos/nvidia.svg',
       weeklyTrend: '-4%',
       trendUp: false,
       volume: '497.5M'
@@ -36,7 +36,7 @@ export default function Providers() {
       price: '$0.010',
       latency: '220ms',
       availability: '97%',
-      logo: '🌀',
+      logo: '/logos/google.svg',
       weeklyTrend: '+24%',
       trendUp: true,
       volume: '81.7M'
@@ -154,8 +154,8 @@ export default function Providers() {
               >
                 {/* Logo & Header */}
                 <div className="flex items-center gap-3.5 mb-6">
-                  <div className="w-10 h-10 bg-slate-50 border border-[#eaeaea] rounded-lg flex items-center justify-center text-xl">
-                    {provider.logo}
+                  <div className="w-10 h-10 bg-slate-50 border border-[#eaeaea] rounded-lg flex items-center justify-center">
+                    <img src={provider.logo} alt={`${provider.creator} logo`} className="w-5 h-5 object-contain" />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-slate-900 font-sans">{provider.name}</h3>

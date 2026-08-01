@@ -7,5 +7,20 @@ export async function initializeDatabase() {
   if (!db) return false
   await db.query(`create table if not exists agents (id uuid primary key, name text not null, description text, preference text not null default 'cheapest', max_price numeric not null default .03, created_at timestamptz not null default now())`)
   await db.query(`create table if not exists api_keys (id uuid primary key, agent_id uuid not null references agents(id) on delete cascade, key_hash text not null unique, key_prefix text not null, created_at timestamptz not null default now(), revoked_at timestamptz)`)
+  await db.query(`create table if not exists routing_transactions (
+    id uuid primary key,
+    created_at timestamptz not null default now(),
+    status text not null check (status in ('success', 'failed')),
+    provider_id text,
+    provider_name text,
+    preference text,
+    prompt_preview text,
+    inbound_payment_reference text,
+    downstream_payment_tx text,
+    provider_cost numeric,
+    latency_ms integer,
+    error text
+  )`)
+  await db.query('create index if not exists routing_transactions_created_at_idx on routing_transactions (created_at desc)')
   return true
 }
