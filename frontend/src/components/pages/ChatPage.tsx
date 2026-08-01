@@ -168,19 +168,19 @@ export default function ChatPage() {
       {/* Left Settings Sidebar */}
       <div className="w-full md:w-80 space-y-6 flex-shrink-0">
         <div className="v5-card p-5 bg-white shadow-sm">
-          <h3 className="v5-card-title text-xs uppercase tracking-wider mb-4">Configuration</h3>
+          <h3 className="v5-card-title text-xs uppercase tracking-wider mb-4">Agent Configuration</h3>
           
           <div className="space-y-4">
             <div>
-              <label className="v5-label text-[10px] uppercase font-bold text-slate-400 block mb-1.5">Active Model Preference</label>
+              <label className="v5-label text-[10px] uppercase font-bold text-slate-400 block mb-1.5">Active Agent Profile</label>
               <select
                 value={chatModel}
                 onChange={(e) => setChatModel(e.target.value)}
                 className="v5-select text-xs text-[#111]"
               >
-                <option value="cheapest">Laguna XS 2.1 (free) - $0.005</option>
-                <option value="reliable">Most reliable route</option>
-                <option value="fastest">Nemotron 3 Ultra (free) - $0.020</option>
+                <option value="cheapest">Laguna XS 2.1 Agent (free) - $0.005</option>
+                <option value="reliable">Most Reliable Agent Route</option>
+                <option value="fastest">Nemotron 3 Ultra Agent (free) - $0.020</option>
               </select>
             </div>
 
@@ -196,7 +196,7 @@ export default function ChatPage() {
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="v5-label text-[10px] uppercase font-bold text-slate-400">Temperature</label>
+                <label className="v5-label text-[10px] uppercase font-bold text-slate-400">Agent Temperature</label>
                 <span className="text-[10px] text-slate-700 font-mono font-bold">{temperature}</span>
               </div>
               <input
@@ -214,15 +214,24 @@ export default function ChatPage() {
               onClick={clearChat}
               className="v5-btn v5-btn-default w-full py-2 text-xs font-semibold rounded-lg"
             >
-              Clear Chat History
+              Reset Session
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Chat Playground Area */}
-      <div className="flex-1 v5-card flex flex-col justify-between overflow-hidden shadow-sm bg-white min-h-[460px]">
+      <div className="flex-1 v5-card flex flex-col justify-between overflow-hidden shadow-xs bg-white min-h-[460px]">
         
+        {/* Header information */}
+        <div className="border-b border-[#eaeaea] p-4 bg-[#fafafa]/50 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-xs font-bold text-slate-900">Interact with Agent</span>
+          </div>
+          <span className="text-[10px] text-slate-400 font-semibold font-mono">x402 Outbound payments active</span>
+        </div>
+
         {/* Messages Feed */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4 max-h-[380px] scrollbar-thin">
           {chatMessages.map((msg) => (
@@ -234,7 +243,7 @@ export default function ChatPage() {
             >
               {msg.role !== 'user' && msg.role !== 'system' && (
                 <span className="text-[10px] text-[#666] font-semibold mb-1 uppercase tracking-wider font-sans select-none">
-                  {msg.provider ? `${msg.provider}` : 'Router System'}
+                  {msg.provider ? `${msg.provider}` : 'AgentPay Router'}
                 </span>
               )}
 
@@ -268,7 +277,7 @@ export default function ChatPage() {
           {loading && (
             <div className="flex items-center gap-2 text-slate-500 text-xs font-medium font-sans">
               <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-              <span>Routing request to best provider...</span>
+              <span>Routing payment and resolving agent response...</span>
             </div>
           )}
 
@@ -331,7 +340,7 @@ export default function ChatPage() {
         <form onSubmit={handleSendMessage} className="border-t border-[#eaeaea] p-4 bg-[#fafafa] flex gap-3">
           <input
             type="text"
-            placeholder="Type your prompt here... (Each request triggers a $0.03 USDC route)"
+            placeholder="Type your message to the agent here... (Each call triggers an x402 payment)"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading || paymentStep !== 'idle'}
@@ -376,5 +385,5 @@ export default function ChatPage() {
         </>
       )}
     </div>
-  )
+  );
 }

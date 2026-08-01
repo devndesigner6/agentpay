@@ -5,7 +5,7 @@ export default function Footer() {
 
   const footerLinks: Record<string, Array<{ name: string; page?: 'home' | 'models' | 'chat' | 'rankings' | 'pricing' | 'docs'; url?: string; badge?: string }>> = {
     Product: [
-      { name: 'Chat', page: 'chat' },
+      { name: 'Agents', page: 'chat' },
       { name: 'Rankings', page: 'rankings' },
       { name: 'Models', page: 'models' },
       { name: 'Pricing', page: 'pricing' }
