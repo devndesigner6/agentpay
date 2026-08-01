@@ -47,10 +47,8 @@ export default function Header() {
               className="flex items-center gap-2 group hover:opacity-90 transition-opacity"
             >
               {/* AgentPay stylized logo */}
-              <svg className="w-6 h-6 text-[#111]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
-              </svg>
-              <span className="font-bold text-base text-[#111] tracking-tight">AgentPay</span>
+              <img src="/Avatar.jpg" className="w-6 h-6 rounded-md object-cover" alt="AgentPay Logo" />
+              <span className="font-departure font-bold text-base text-[#111] tracking-tight">AgentPay</span>
             </button>
 
             {/* Search Input Box */}

@@ -6,7 +6,7 @@ import { createPeraPaymentHeaders } from '../utils/x402.js'
 import { NETWORK_LABEL } from '../config.js'
 import { ShimmerButton } from './ui/shimmer-button.js'
 import { RippleButton } from './ui/ripple-button.js'
-import { DiaTextReveal } from './ui/dia-text-reveal.js'
+import { TextReveal } from './ui/text-reveal.js'
 import { DotField } from './ui/DotField.js'
 
 export default function Hero() {
@@ -141,7 +141,7 @@ export default function Hero() {
           <h1 className="text-4xl md:text-6xl font-extrabold text-[#111] leading-[1.08] mb-6 tracking-tight font-sans">
             Run and monetize <span className="font-instrument italic text-[#0047ff]">agents</span>
             <br />
-            with <DiaTextReveal text="financial control" colors={["#0047ff", "#A97CF8", "#F38CB8", "#FDCC92"]} textColor="#111111" className="font-bold" />.
+            with <TextReveal text="financial control." className="text-[#111] font-bold" stagger={0.06} maxDuration={1.2} />
           </h1>
 
           <p className="text-xs md:text-sm text-[#666] mb-8 font-sans leading-relaxed max-w-2xl mx-auto">

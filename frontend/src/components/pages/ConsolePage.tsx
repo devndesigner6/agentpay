@@ -3,6 +3,8 @@ import { useStore } from '../../hooks/useStore.js'
 import axios from 'axios'
 import { API_BASE_URL } from '../../config.js'
 import { ShimmerButton } from '../ui/shimmer-button.js'
+import { SliderDetents } from '../ui/slider-detents.js'
+import { TextReveal } from '../ui/text-reveal.js'
 
 interface AgentKey {
   id: string
@@ -38,6 +40,26 @@ interface TransactionRecord {
 export default function ConsolePage() {
   const { stats, fetchStats, connectedWallet, setPage } = useStore()
   const [activeTab, setActiveTab] = useState<'overview' | 'gateway' | 'keys' | 'models' | 'policies' | 'logs' | 'account'>('overview')
+
+  const priceDetents = [
+    { value: 0.005, label: 'Cheap' },
+    { value: 0.015, label: 'Standard' },
+    { value: 0.030, label: 'Premium' },
+  ]
+  const budgetDetents = [
+    { value: 5.00, label: 'Low' },
+    { value: 10.00, label: 'Medium' },
+    { value: 20.00, label: 'High' },
+  ]
+  const latencyDetents = [
+    { value: 100, label: 'Real-time' },
+    { value: 250, label: 'Standard' },
+    { value: 500, label: 'Relaxed' },
+  ]
+
+  const formatPrice = (val: number) => `$${val.toFixed(3)} USDC`
+  const formatBudget = (val: number) => `$${val.toFixed(2)} USDC`
+  const formatLatency = (val: number) => `${val} ms`
   const [isGatewayDropdownOpen, setIsGatewayDropdownOpen] = useState(true)
   const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false)
   const [showNewMenu, setShowNewMenu] = useState(false)
@@ -200,11 +222,9 @@ export default function ConsolePage() {
       <aside className="agentpay-sidebar">
         <button onClick={() => setPage('home')} className="agentpay-wordmark">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white text-lg font-bold">
-              A
-            </div>
+            <img src="/Avatar.jpg" className="w-8 h-8 rounded-lg object-cover" alt="" />
             <div className="flex flex-col text-left">
-              <span className="font-bold text-sm tracking-tight text-slate-900">AgentPay</span>
+              <span className="font-departure font-bold text-sm tracking-tight text-slate-900">AgentPay</span>
               <span className="text-[10px] text-slate-400 font-normal mt-0.5 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" /> Personal
               </span>
@@ -374,7 +394,13 @@ export default function ConsolePage() {
               {activeTab === 'overview' ? 'FINANCE OVERVIEW' : activeTab === 'keys' ? 'AGENT KEYS' : activeTab === 'policies' ? 'GUARDRAILS' : 'WORKSPACE ROUTER'}
             </p>
             <h1 className="text-2xl font-bold text-[#111] mt-1">
-              {activeTab === 'overview' ? 'Finance' : activeTab === 'keys' ? 'Agents' : activeTab === 'policies' ? 'Control' : activeTab === 'account' ? 'API Keys' : 'Payments'}
+              <TextReveal 
+                text={activeTab === 'overview' ? 'Finance' : activeTab === 'keys' ? 'Agents' : activeTab === 'policies' ? 'Control' : activeTab === 'account' ? 'API Keys' : 'Payments'} 
+                className="font-bold text-[#111]" 
+                stagger={0.06} 
+                maxDuration={1.0} 
+                key={activeTab} 
+              />
             </h1>
             <span className="text-xs text-slate-500 mt-1 block font-sans">
               {activeTab === 'overview' ? 'Your AI consumption, paid endpoint revenue, and known margin at a glance.' : 'Configure dynamic routing and payment guardrails for agent key execution.'}
@@ -691,53 +717,38 @@ export default function ConsolePage() {
               <h4 className="v5-card-title text-xs uppercase tracking-wider mb-6">Runtime Guardrails</h4>
               
               <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between items-center mb-1.5">
-                    <label className="v5-label text-[10px] uppercase font-bold text-slate-400">Max Cost Per Request Limit</label>
-                    <span className="text-xs font-bold text-slate-900 font-mono">${maxPriceLimit.toFixed(3)} USDC</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0.005"
-                    max="0.03"
-                    step="0.005"
-                    value={maxPriceLimit}
-                    onChange={(e) => setMaxPriceLimit(parseFloat(e.target.value))}
-                    className="w-full accent-[#0047ff] bg-slate-200 h-1.5 rounded"
-                  />
-                </div>
+                <SliderDetents
+                  label="Max Cost Per Request Limit"
+                  min={0.005}
+                  max={0.03}
+                  step={0.005}
+                  value={maxPriceLimit}
+                  detents={priceDetents}
+                  format={formatPrice}
+                  onValueChange={setMaxPriceLimit}
+                />
 
-                <div>
-                  <div className="flex justify-between items-center mb-1.5">
-                    <label className="v5-label text-[10px] uppercase font-bold text-slate-400">Daily Agent Budget limit</label>
-                    <span className="text-xs font-bold text-slate-900 font-mono">${dailyBudgetLimit.toFixed(2)} USDC</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1.00"
-                    max="20.00"
-                    step="1.00"
-                    value={dailyBudgetLimit}
-                    onChange={(e) => setDailyBudgetLimit(parseFloat(e.target.value))}
-                    className="w-full accent-[#0047ff] bg-slate-200 h-1.5 rounded"
-                  />
-                </div>
+                <SliderDetents
+                  label="Daily Agent Budget Limit"
+                  min={1.00}
+                  max={20.00}
+                  step={1.00}
+                  value={dailyBudgetLimit}
+                  detents={budgetDetents}
+                  format={formatBudget}
+                  onValueChange={setDailyBudgetLimit}
+                />
 
-                <div>
-                  <div className="flex justify-between items-center mb-1.5">
-                    <label className="v5-label text-[10px] uppercase font-bold text-slate-400">Model Failover latency Limit</label>
-                    <span className="text-xs font-bold text-slate-900 font-mono">{failoverLatency} ms</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="100"
-                    max="500"
-                    step="50"
-                    value={failoverLatency}
-                    onChange={(e) => setFailoverLatency(parseInt(e.target.value))}
-                    className="w-full accent-[#0047ff] bg-slate-200 h-1.5 rounded"
-                  />
-                </div>
+                <SliderDetents
+                  label="Model Failover Latency Limit"
+                  min={100}
+                  max={500}
+                  step={50}
+                  value={failoverLatency}
+                  detents={latencyDetents}
+                  format={formatLatency}
+                  onValueChange={setFailoverLatency}
+                />
 
                 <button
                   onClick={() => alert('Policies successfully saved to database.')}

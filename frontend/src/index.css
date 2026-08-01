@@ -15,7 +15,7 @@
 
 @layer base {
   body {
-    font-family: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: 'Geist Mono', 'Geist', ui-monospace, monospace;
     background-color: #fafafa;
     color: #111111;
   }
@@ -347,5 +347,4 @@
     opacity: 0;
   }
 }
-
 

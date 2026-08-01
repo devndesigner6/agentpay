@@ -28,3 +28,5 @@ frontend/public/alephant_scraped.css
 # OS files
 .DS_Store
 Thumbs.db
+tmp/
+frontend/public/favicon.ico

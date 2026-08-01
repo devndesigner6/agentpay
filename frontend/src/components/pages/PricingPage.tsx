@@ -1,3 +1,7 @@
+import { TextReveal } from '../ui/text-reveal.js'
+import { ShimmerButton } from '../ui/shimmer-button.js'
+import { RippleButton } from '../ui/ripple-button.js'
+
 export default function PricingPage() {
   const tiers = [
     {
@@ -32,7 +36,9 @@ export default function PricingPage() {
       
       {/* Header */}
       <div className="mb-14 text-center">
-        <h1 className="text-3xl font-extrabold text-[#111] mb-2 tracking-tight">Pricing Plans</h1>
+        <h1 className="text-3xl font-extrabold text-[#111] mb-2 tracking-tight">
+          <TextReveal text="Pricing Plans" className="font-bold text-[#111]" stagger={0.06} maxDuration={1.0} />
+        </h1>
         <p className="text-xs text-[#666]">Pay only for what your agent uses. Settle micropayments atomically with x402.</p>
       </div>
 
@@ -70,11 +76,24 @@ export default function PricingPage() {
               </ul>
             </div>
 
-            <button className={`v5-btn w-full mt-8 py-2.5 text-xs font-bold rounded-lg ${
-              tier.active ? 'v5-btn-primary' : 'v5-btn-default'
-            }`}>
-              Select Plan
-            </button>
+            {tier.active ? (
+              <ShimmerButton
+                onClick={() => alert(`Selected ${tier.name}`)}
+                shimmerColor="#0047ff"
+                background="#000000"
+                className="w-full mt-8 py-2.5 text-xs font-bold rounded-lg border-beam"
+              >
+                Select Plan
+              </ShimmerButton>
+            ) : (
+              <RippleButton
+                onClick={() => alert(`Selected ${tier.name}`)}
+                rippleColor="rgba(0, 0, 0, 0.05)"
+                className="w-full mt-8 py-2.5 text-xs font-bold rounded-lg bg-white border border-[#eaeaea] text-slate-700 hover:bg-slate-50 shadow-2xs"
+              >
+                Select Plan
+              </RippleButton>
+            )}
           </div>
         ))}
       </div>

@@ -6,7 +6,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        sans: ['Geist Mono', 'Geist', 'ui-monospace', 'monospace'],
+        instrument: ['"Instrument Serif"', 'serif'],
+        departure: ['"Departure Mono"', 'monospace'],
+        jetbrains: ['"JetBrains Mono"', 'monospace'],
+        mono: ['"Geist Mono"', 'monospace'],
       },
       colors: {
         brand: {

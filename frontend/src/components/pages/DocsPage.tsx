@@ -1,7 +1,32 @@
 import { useState } from 'react'
+import { TextReveal } from '../ui/text-reveal.js'
+import { SwipeDeck } from '../ui/swipe-deck.js'
 
 export default function DocsPage() {
   const [activeTab, setActiveTab] = useState('python')
+
+  const faqItems = [
+    {
+      id: 'q1',
+      question: 'What is the x402 standard?',
+      answer: 'An HTTP standard that lets clients pay for AI requests per call, using cryptographic transaction proofs as request signatures.'
+    },
+    {
+      id: 'q2',
+      question: 'Which currency is used for payment?',
+      answer: 'Payments settle in USDC on the Algorand Testnet (and Mainnet-ready) for instant transaction finality.'
+    },
+    {
+      id: 'q3',
+      question: 'How does intelligent routing work?',
+      answer: 'AgentPay monitors cost, latency, and reliability in real-time, automatically choosing the optimal backend model node.'
+    },
+    {
+      id: 'q4',
+      question: 'Is it free to start testing?',
+      answer: 'Yes! Select the "Free Trial" tier to test with simulated sandbox payments and free routed models.'
+    }
+  ]
 
   const codeBlocks = {
     python: `import requests
@@ -64,7 +89,9 @@ fetch("https://YOUR_DOMAIN/api/generate", {
       
       {/* Header */}
       <div className="mb-10 select-none text-center">
-        <h1 className="text-3xl font-extrabold text-[#111] mb-2 tracking-tight">API Documentation</h1>
+        <h1 className="text-3xl font-extrabold text-[#111] mb-2 tracking-tight">
+          <TextReveal text="API Documentation" className="font-bold text-[#111]" stagger={0.06} maxDuration={1.0} />
+        </h1>
         <p className="text-xs text-[#666]">Integrate autonomous AI agents with AgentPay's x402 payment router.</p>
       </div>
 
@@ -112,6 +139,34 @@ fetch("https://YOUR_DOMAIN/api/generate", {
               {codeBlocks[activeTab as keyof typeof codeBlocks]}
             </pre>
           </div>
+        </section>
+
+        {/* Step 3: Swipe Q&A */}
+        <section className="v5-card p-6 bg-white shadow-sm space-y-4">
+          <h2 className="text-sm font-bold text-[#111] mb-1">Quick-Start Interactive Q&A</h2>
+          <p className="text-xs text-[#666] leading-relaxed mb-4">
+            Swipe through the cards below to quickly grasp the core concepts of AgentPay FinOps.
+          </p>
+          <SwipeDeck
+            items={faqItems}
+            itemKey={(q) => q.id}
+            itemLabel={(q) => q.question}
+            leftLabel="Dismiss"
+            rightLabel="Got it"
+            undoLabel="Go Back"
+            emptyLabel="All cards reviewed! Press Go Back to read them again."
+            height={160}
+          >
+            {(q) => (
+              <div className="flex h-full flex-col justify-between p-5 bg-white text-slate-800">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-blue-600 tracking-wide font-departure">Question</span>
+                  <p className="mt-1.5 text-xs font-bold font-sans text-slate-900 leading-normal">{q.question}</p>
+                </div>
+                <p className="text-[11px] text-slate-500 font-sans leading-relaxed">{q.answer}</p>
+              </div>
+            )}
+          </SwipeDeck>
         </section>
 
       </div>

@@ -171,12 +171,12 @@ export const DotField = memo(({
       const len = dots.length;
       const t = frameCount * 0.02;
 
-      const targetEngagement = Math.min(m.speed / 5, 1);
-      engagement.current += (targetEngagement - engagement.current) * 0.06;
+      const targetEngagement = m.x === -9999 || m.y === -9999 ? 0 : 1;
+      engagement.current += (targetEngagement - engagement.current) * 0.08;
       if (engagement.current < 0.001) engagement.current = 0;
       const eng = engagement.current;
 
-      glowOpacity.current += (eng - glowOpacity.current) * 0.08;
+      glowOpacity.current += (eng - glowOpacity.current) * 0.1;
 
       if (glowEl) {
         glowEl.setAttribute('cx', String(m.x));
@@ -309,8 +309,9 @@ export const DotField = memo(({
       >
         <defs>
           <radialGradient id={glowIdRef.current}>
-            <stop offset="0%" stopColor={glowColor} />
-            <stop offset="100%" stopColor="transparent" />
+            <stop offset="0%" stopColor={glowColor} stopOpacity={0.2} />
+            <stop offset="50%" stopColor={glowColor} stopOpacity={0.08} />
+            <stop offset="100%" stopColor={glowColor} stopOpacity={0} />
           </radialGradient>
         </defs>
         <circle

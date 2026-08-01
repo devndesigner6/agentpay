@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TextReveal } from '../ui/text-reveal.js'
 
 export default function RankingsPage() {
   const [activeTab, setActiveTab] = useState('text')
@@ -14,7 +15,9 @@ export default function RankingsPage() {
       
       {/* Header */}
       <div className="mb-10 text-center">
-        <h1 className="text-3xl font-extrabold text-[#111] mb-2 tracking-tight">Model Rankings</h1>
+        <h1 className="text-3xl font-extrabold text-[#111] mb-2 tracking-tight">
+          <TextReveal text="Model Rankings" className="font-bold text-[#111]" stagger={0.06} maxDuration={1.0} />
+        </h1>
         <p className="text-xs text-[#666]">Live Elo ratings, latency records, and standardized reasoning benchmarks.</p>
       </div>
 
