@@ -1,4 +1,5 @@
 import { useStore } from '../hooks/useStore.js'
+import { LogoMarquee } from './ui/logo-marquee.js'
 
 export default function Providers() {
   const { stats } = useStore()
@@ -54,76 +55,86 @@ export default function Providers() {
     return p
   })
 
+  const marqueeLogos = [
+    { id: 'meta', label: 'Meta Llama' },
+    { id: 'google', label: 'Google Gemini' },
+    { id: 'mistral', label: 'Mistral AI' },
+    { id: 'openai', label: 'OpenAI GPT' },
+    { id: 'anthropic', label: 'Anthropic Claude' },
+    { id: 'deepseek', label: 'DeepSeek v3' },
+    { id: 'cohere', label: 'Cohere Command' },
+  ]
+
   return (
     <div id="models">
-      <section className="py-16 bg-brand-black border-t border-brand-border select-none">
+      <section className="py-16 bg-[#fafafa] border-t border-[#eaeaea] select-none">
         <div className="max-w-7xl mx-auto px-6">
           
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-lg font-bold text-white flex items-center gap-1.5 font-sans">
+              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5 font-sans uppercase tracking-wider">
                 Featured Models
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                 </svg>
               </h2>
-              <p className="text-xs text-gray-500 font-sans mt-0.5">
-                Active payment routed models across Algorand
+              <p className="text-xs text-slate-400 font-sans mt-0.5">
+                Active payment routed models across Algorand Testnet
               </p>
             </div>
             
-            <a href="#models" className="text-xs text-gray-400 hover:text-white flex items-center gap-1 font-sans transition-all">
+            <a href="#models" className="text-xs font-bold text-slate-500 hover:text-[#0047ff] flex items-center gap-1 font-sans transition-all">
               View all
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </a>
           </div>
-
+ 
           {/* Grid */}
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6 mb-16">
             {providers.map((provider, i) => (
               <div
                 key={i}
-                className="bg-brand-navy border border-brand-border rounded-xl p-5 hover:border-zinc-700 transition-all shadow-md flex flex-col justify-between min-h-[170px]"
+                className="bg-white border border-[#eaeaea] rounded-xl p-5 hover:border-slate-300 transition-all shadow-2xs flex flex-col justify-between min-h-[170px]"
               >
                 {/* Logo & Header */}
                 <div className="flex items-center gap-3.5 mb-6">
-                  <div className="w-10 h-10 bg-zinc-900 border border-brand-border rounded-lg flex items-center justify-center text-xl">
+                  <div className="w-10 h-10 bg-slate-50 border border-[#eaeaea] rounded-lg flex items-center justify-center text-xl">
                     {provider.logo}
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white font-sans">{provider.name}</h3>
-                    <p className="text-[10px] text-gray-500 font-sans font-medium">{provider.creator}</p>
+                    <h3 className="text-xs font-bold text-slate-900 font-sans">{provider.name}</h3>
+                    <p className="text-[10px] text-slate-400 font-sans font-semibold mt-0.5">{provider.creator}</p>
                   </div>
                 </div>
 
                 {/* Tokens & Trends stats */}
-                <div className="flex justify-between border-t border-brand-border/60 pt-4">
+                <div className="flex justify-between border-t border-[#eaeaea] pt-4">
                   <div>
-                    <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold block mb-1 font-sans">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block mb-1 font-sans">
                       Request Cost
                     </span>
-                    <span className="text-xs text-white font-bold font-mono">
+                    <span className="text-xs text-slate-700 font-bold font-mono">
                       {provider.price}
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold block mb-1 font-sans">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block mb-1 font-sans">
                       Availability
                     </span>
-                    <span className="text-xs text-white font-bold font-mono">
+                    <span className="text-xs text-slate-700 font-bold font-mono">
                       {provider.availability}
                     </span>
                   </div>
 
                   <div className="text-right">
-                    <span className="text-[9px] uppercase tracking-wider text-gray-500 font-bold block mb-1 font-sans">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block mb-1 font-sans">
                       Weekly Trend
                     </span>
-                    <span className={`text-xs font-bold font-mono ${provider.trendUp ? 'text-green-500' : 'text-red-500'}`}>
+                    <span className={`text-xs font-bold font-mono ${provider.trendUp ? 'text-emerald-600' : 'text-rose-500'}`}>
                       {provider.weeklyTrend}
                     </span>
                   </div>
@@ -131,6 +142,21 @@ export default function Providers() {
 
               </div>
             ))}
+          </div>
+
+          {/* Marquee for routing endpoints */}
+          <div className="mt-12">
+            <p className="mb-4 text-center text-[10px] font-bold uppercase tracking-widest text-slate-400">
+              Supported APIs & Networks
+            </p>
+            <LogoMarquee
+              items={marqueeLogos}
+              label="Providers"
+              speed={30}
+              gap={50}
+              direction="left"
+              className="border border-[#eaeaea] bg-white rounded-xl shadow-2xs py-4"
+            />
           </div>
 
         </div>

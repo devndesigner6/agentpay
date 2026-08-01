@@ -20,9 +20,9 @@ export default function Header() {
     <div className="w-full flex flex-col font-sans select-none">
       {/* Promo Banner */}
       {bannerVisible && (
-        <div className="w-full bg-[#0047ff] text-white text-xs py-2.5 px-6 flex items-center justify-between transition-all select-none">
+        <div className="w-full bg-[#0047ff] text-white text-xs py-2 px-6 flex items-center justify-between transition-all select-none">
           <div className="flex-1 text-center font-medium">
-            <strong>AgentPay</strong> is configured for Algorand {NETWORK_LABEL}. Complete a verified x402 payment before calling it live.
+            <strong className="font-departure uppercase text-[9px] tracking-wider bg-white/10 px-1.5 py-0.5 rounded mr-1">AgentPay</strong> is configured for Algorand <span className="font-geist-mono font-bold">{NETWORK_LABEL}</span>. Complete a verified x402 payment before calling it live.
           </div>
           <button
             onClick={() => setBannerVisible(false)}
@@ -67,43 +67,43 @@ export default function Header() {
           <nav className="hidden md:flex items-center gap-1">
             <button
               onClick={() => setPage('home')}
-              className={`v5-tab ${activePage === 'home' ? 'active' : ''}`}
+              className={`v5-tab uppercase text-[10px] tracking-wider font-bold ${activePage === 'home' ? 'active' : ''}`}
             >
               Home
             </button>
             <button
               onClick={() => setPage('console')}
-              className={`v5-tab ${activePage === 'console' ? 'active' : ''}`}
+              className={`v5-tab uppercase text-[10px] tracking-wider font-bold ${activePage === 'console' ? 'active' : ''}`}
             >
               Console
             </button>
             <button
               onClick={() => setPage('models')}
-              className={`v5-tab ${activePage === 'models' ? 'active' : ''}`}
+              className={`v5-tab uppercase text-[10px] tracking-wider font-bold ${activePage === 'models' ? 'active' : ''}`}
             >
               Models
             </button>
             <button
               onClick={() => setPage('chat')}
-              className={`v5-tab ${activePage === 'chat' ? 'active' : ''}`}
+              className={`v5-tab uppercase text-[10px] tracking-wider font-bold ${activePage === 'chat' ? 'active' : ''}`}
             >
               Agents
             </button>
             <button
               onClick={() => setPage('rankings')}
-              className={`v5-tab ${activePage === 'rankings' ? 'active' : ''}`}
+              className={`v5-tab uppercase text-[10px] tracking-wider font-bold ${activePage === 'rankings' ? 'active' : ''}`}
             >
               Rankings
             </button>
             <button
               onClick={() => setPage('pricing')}
-              className={`v5-tab ${activePage === 'pricing' ? 'active' : ''}`}
+              className={`v5-tab uppercase text-[10px] tracking-wider font-bold ${activePage === 'pricing' ? 'active' : ''}`}
             >
               Pricing
             </button>
             <button
               onClick={() => setPage('docs')}
-              className={`v5-tab ${activePage === 'docs' ? 'active' : ''}`}
+              className={`v5-tab uppercase text-[10px] tracking-wider font-bold ${activePage === 'docs' ? 'active' : ''}`}
             >
               Docs
             </button>
@@ -112,8 +112,8 @@ export default function Header() {
           {/* Right Connect Wallet button */}
           <div className="flex items-center gap-3 relative">
             {connectedWallet ? (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-[#333] bg-white border border-[#eaeaea] px-3.5 py-1.5 rounded-lg font-mono font-medium shadow-2xs">
+              <div className="flex items-center gap-2 animate-fade-in">
+                <span className="text-xs text-[#333] bg-white border border-[#eaeaea] px-3.5 py-1.5 rounded-lg font-geist-mono font-bold shadow-2xs">
                   {connectedWallet.address.substring(0, 10)}...{connectedWallet.address.slice(-4)}
                 </span>
                 <button
@@ -127,7 +127,7 @@ export default function Header() {
               <div className="relative">
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="v5-btn v5-btn-primary rounded-lg text-xs flex items-center gap-1.5"
+                  className="v5-btn v5-btn-primary rounded-lg text-xs flex items-center gap-1.5 font-bold"
                 >
                   Connect Wallet
                   <svg className={`w-3.5 h-3.5 transition-all ${dropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,7 +142,7 @@ export default function Header() {
                     <div className="absolute right-0 mt-2 w-48 v5-popover z-50 animate-fade-in font-sans">
                       <button
                         onClick={handlePeraConnect}
-                        className="w-full text-left v5-popover-item text-xs text-[#111] hover:bg-slate-50 flex items-center gap-2 transition-all font-medium"
+                        className="w-full text-left v5-popover-item text-xs text-[#111] hover:bg-slate-50 flex items-center gap-2 transition-all font-bold"
                       >
                         <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full" />
                         Pera Wallet (Algorand)

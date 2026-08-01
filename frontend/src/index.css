@@ -1,8 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@font-face {
+  font-family: 'Departure Mono';
+  src: url('/fonts/DepartureMono-Regular.woff2') format('woff2'),
+       url('/fonts/DepartureMono-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
@@ -14,6 +19,78 @@
     background-color: #fafafa;
     color: #111111;
   }
+}
+
+/* Custom Font Utilities */
+.font-departure {
+  font-family: 'Departure Mono', monospace;
+}
+.font-instrument {
+  font-family: 'Instrument Serif', serif;
+}
+.font-jetbrains {
+  font-family: 'JetBrains Mono', monospace;
+}
+.font-geist-mono {
+  font-family: 'Geist Mono', monospace;
+}
+
+/* Micro Interactions & Component Effects */
+.bg-grid-pattern {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.02) 1px, transparent 1px);
+}
+.bg-dot-pattern {
+  background-size: 16px 16px;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(234, 234, 234, 0.8);
+}
+.shiny-text {
+  background: linear-gradient(120deg, rgba(0, 0, 0, 0.8) 40%, rgba(0, 71, 255, 0.95) 50%, rgba(0, 0, 0, 0.8) 60%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: shiny 3s linear infinite;
+}
+@keyframes shiny {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+.border-beam {
+  position: relative;
+}
+.border-beam::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    to right,
+    #0047ff,
+    #eaeaea,
+    #0047ff
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  background-size: 200% auto;
+  animation: beam 4s linear infinite;
+  pointer-events: none;
+}
+@keyframes beam {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
 :root {
@@ -157,31 +234,31 @@
 
 /* Workspace main page layout matching Alephant */
 .agentpay-workspace {
-  @apply min-h-screen flex bg-[#fafafa] font-sans;
+  @apply min-h-screen flex bg-[#fafafa] font-sans text-slate-800 antialiased;
 }
 .agentpay-sidebar {
   @apply w-60 border-r border-[#eaeaea] p-4 flex flex-col bg-white h-screen sticky top-0 overflow-y-auto select-none;
 }
 .agentpay-wordmark {
-  @apply flex items-center justify-between font-bold text-sm text-[#111] px-2 py-1 mb-4 hover:opacity-80 transition-opacity text-left;
+  @apply flex items-center gap-2.5 font-bold text-sm text-[#111] px-2 py-2 mb-4 hover:opacity-80 transition-opacity text-left;
 }
 .agentpay-search {
-  @apply flex items-center gap-2 px-3 py-1.5 bg-[#fafafa] border border-[#eaeaea] rounded-lg text-slate-400 text-xs mb-5 cursor-pointer hover:border-slate-300 transition-all select-none;
+  @apply flex items-center gap-2 px-3 py-2 bg-[#fafafa] border border-[#eaeaea] rounded-lg text-slate-400 text-xs mb-5 cursor-pointer hover:border-slate-300 transition-all select-none;
 }
 .agentpay-search kbd {
-  @apply ml-auto px-1 py-0.5 text-[9px] bg-white border border-[#eaeaea] rounded text-slate-400 font-mono shadow-sm;
+  @apply ml-auto px-1.5 py-0.5 text-[9px] bg-white border border-[#eaeaea] rounded text-slate-400 font-mono shadow-sm;
 }
 .agentpay-nav-label {
-  @apply text-[9px] font-bold text-slate-400 uppercase tracking-widest px-2.5 mb-1.5 mt-4;
+  @apply text-[9px] font-bold text-slate-400 uppercase tracking-widest px-2.5 mb-2 mt-4;
 }
 .agentpay-nav {
-  @apply w-full flex items-center justify-between px-2.5 py-1.5 text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all text-left mb-0.5;
+  @apply w-full flex items-center justify-between px-2.5 py-2 text-xs font-semibold text-slate-500 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all text-left mb-0.5;
 }
 .agentpay-nav.active {
-  @apply text-[#0047ff] bg-blue-50/50 font-semibold;
+  @apply text-slate-900 bg-slate-50 font-bold border-l-2 border-[#0047ff] rounded-l-none pl-2;
 }
 .agentpay-sidebar-foot {
-  @apply mt-auto pt-4 border-t border-[#eaeaea] text-[10px] text-slate-400 flex flex-col gap-1;
+  @apply mt-auto pt-4 border-t border-[#eaeaea] text-[10px] text-slate-400 flex flex-col gap-1.5;
 }
 .agentpay-sidebar-foot strong {
   @apply text-[#111] font-mono mt-1 font-semibold;
@@ -197,7 +274,7 @@
   @apply h-14 border-b border-[#eaeaea] bg-white flex items-center justify-between px-8 text-xs select-none sticky top-0 z-40;
 }
 .agentpay-page-title {
-  @apply flex justify-between items-start py-8 px-8 max-w-6xl w-full mx-auto;
+  @apply flex justify-between items-start py-8 px-8 max-w-5xl w-full mx-auto;
 }
 .agentpay-range {
   @apply flex bg-white border border-[#eaeaea] rounded-lg p-0.5 shadow-sm;
@@ -209,20 +286,66 @@
   @apply bg-slate-50 text-slate-900 shadow-sm;
 }
 .agentpay-setup-card {
-  @apply bg-white border border-[#eaeaea] rounded-xl p-5 flex items-center justify-between shadow-sm max-w-6xl w-full mx-auto mb-6;
+  @apply bg-white border border-[#eaeaea] rounded-xl p-5 flex items-center justify-between shadow-sm max-w-5xl w-full mx-auto mb-6;
 }
 
 /* Animations */
 .animate-fade-in {
-  animation: fadeIn 0.2s ease-out;
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(2px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* Layout utilities */
 .agentpay-console-grid {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl w-full mx-auto px-8 mb-8;
+  @apply grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl w-full mx-auto px-8 mb-8;
 }
+
+/* Modal refinements */
+.v5-modal-overlay {
+  @apply fixed inset-0 bg-slate-950/20 backdrop-blur-sm z-50 animate-fade-in;
+}
+.v5-modal-container {
+  @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white border border-[#eaeaea] rounded-2xl shadow-xl z-50 p-6 font-sans animate-fade-in;
+}
+
+/* Shimmer Button Keyframes */
+.animate-shimmer-btn-slide {
+  animation: shimmer-btn-slide var(--shimmer-duration, 3s) infinite linear;
+}
+@keyframes shimmer-btn-slide {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Sweep Band Keyframes for DiaTextReveal */
+.animate-sweep-band {
+  animation: sweep-band var(--sweep-duration, 1.5s) ease-in-out;
+}
+@keyframes sweep-band {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Ripple Button Keyframes */
+@keyframes ripple-anim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
 
