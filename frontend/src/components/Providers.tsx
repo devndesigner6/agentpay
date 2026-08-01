@@ -56,13 +56,66 @@ export default function Providers() {
   })
 
   const marqueeLogos = [
-    { id: 'meta', label: 'Meta Llama' },
-    { id: 'google', label: 'Google Gemini' },
-    { id: 'mistral', label: 'Mistral AI' },
-    { id: 'openai', label: 'OpenAI GPT' },
-    { id: 'anthropic', label: 'Anthropic Claude' },
-    { id: 'deepseek', label: 'DeepSeek v3' },
-    { id: 'cohere', label: 'Cohere Command' },
+    { 
+      id: 'openai', 
+      label: 'OpenAI',
+      mark: (
+        <span className="flex items-center gap-2">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/openai.svg" className="w-4 h-4 opacity-50 grayscale hover:grayscale-0 transition-all dark:invert" alt="OpenAI" />
+          <span className="font-bold text-slate-800 font-sans">OpenAI</span>
+        </span>
+      )
+    },
+    { 
+      id: 'google', 
+      label: 'Google Gemini',
+      mark: (
+        <span className="flex items-center gap-2">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/google.svg" className="w-4 h-4 opacity-50 grayscale hover:grayscale-0 transition-all" alt="Google" />
+          <span className="font-bold text-slate-800 font-sans">Google Gemini</span>
+        </span>
+      )
+    },
+    { 
+      id: 'meta', 
+      label: 'Meta Llama',
+      mark: (
+        <span className="flex items-center gap-2">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/meta.svg" className="w-4 h-4 opacity-50 grayscale hover:grayscale-0 transition-all" alt="Meta" />
+          <span className="font-bold text-slate-800 font-sans">Meta Llama</span>
+        </span>
+      )
+    },
+    { 
+      id: 'anthropic', 
+      label: 'Anthropic Claude',
+      mark: (
+        <span className="flex items-center gap-2">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/anthropic.svg" className="w-4 h-4 opacity-50 grayscale hover:grayscale-0 transition-all" alt="Anthropic" />
+          <span className="font-bold text-slate-800 font-sans">Anthropic Claude</span>
+        </span>
+      )
+    },
+    { 
+      id: 'mistral', 
+      label: 'Mistral AI',
+      mark: (
+        <span className="flex items-center gap-2">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/mistral.svg" className="w-4 h-4 opacity-50 grayscale hover:grayscale-0 transition-all" alt="Mistral" />
+          <span className="font-bold text-slate-800 font-sans">Mistral AI</span>
+        </span>
+      )
+    },
+    { 
+      id: 'cohere', 
+      label: 'Cohere',
+      mark: (
+        <span className="flex items-center gap-2">
+          <img src="https://cdn.jsdelivr.net/npm/simple-icons@v14/icons/cohere.svg" className="w-4 h-4 opacity-50 grayscale hover:grayscale-0 transition-all" alt="Cohere" />
+          <span className="font-bold text-slate-800 font-sans">Cohere</span>
+        </span>
+      )
+    },
   ]
 
   return (
