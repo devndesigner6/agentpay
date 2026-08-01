@@ -7,6 +7,8 @@ import statsRoutes from './routes/stats.js'
 import providersRoutes from './routes/providers.js'
 import transactionsRoutes from './routes/transactions.js'
 import { initializeX402 } from './payments/x402_client.js'
+import agentsRoutes from './routes/agents.js'
+import { initializeDatabase } from './store/db.js'
 
 const app = express()
 
@@ -51,6 +53,7 @@ app.use('/api', generateRoutes)
 app.use('/api', statsRoutes)
 app.use('/api', providersRoutes)
 app.use('/api', transactionsRoutes)
+app.use('/api', agentsRoutes)
 
 // 404 handler
 app.use((req, res) => {
@@ -58,7 +61,7 @@ app.use((req, res) => {
 })
 
 // Start server
-initializeX402().then(() => {
+Promise.all([initializeX402(), initializeDatabase().catch(error => console.error('Database initialization failed:', error))]).then(() => {
   app.listen(config.port, '0.0.0.0', () => {
     console.log(`🚀 AgentPay Backend running on port ${config.port}`)
     console.log(`📍 Network: ${config.algorand.network}`)
