@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,7 +7,21 @@
 @layer base {
   body {
     @apply font-sans;
+    font-family: Geist, Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #fafafa;
+    color: #111;
   }
+}
+
+:root {
+  --agentpay-page: #fafafa;
+  --agentpay-card: #fff;
+  --agentpay-border: #eaeaea;
+  --agentpay-text: #111;
+  --agentpay-muted: #666;
+  --agentpay-brand: #0047ff;
+  --agentpay-radius: 6px;
+  --agentpay-modal-radius: 10px;
 }
 
 @layer components {
