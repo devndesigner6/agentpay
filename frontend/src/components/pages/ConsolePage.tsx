@@ -5,6 +5,7 @@ import { API_BASE_URL } from '../../config.js'
 import { ShimmerButton } from '../ui/shimmer-button.js'
 import { SliderDetents } from '../ui/slider-detents.js'
 import { TextReveal } from '../ui/text-reveal.js'
+import { Tabs } from '../ui/tabs.js'
 
 interface AgentKey {
   id: string
@@ -40,6 +41,7 @@ interface TransactionRecord {
 export default function ConsolePage() {
   const { stats, fetchStats, connectedWallet, setPage } = useStore()
   const [activeTab, setActiveTab] = useState<'overview' | 'gateway' | 'keys' | 'models' | 'policies' | 'logs' | 'account'>('overview')
+  const [financeSection, setFinanceSection] = useState('overview')
 
   const priceDetents = [
     { value: 0.005, label: 'Cheap' },
@@ -419,6 +421,10 @@ export default function ConsolePage() {
         {/* FINANCE OVERVIEW TAB */}
         {activeTab === 'overview' && (
           <div className="space-y-6 animate-fade-in px-8 max-w-5xl w-full mx-auto pb-12">
+            <Tabs items={[{ value: 'overview', label: 'Overview' }, { value: 'activity', label: 'Activity' }, { value: 'routes', label: 'Provider routes' }]} value={financeSection} onValueChange={setFinanceSection} />
+            {financeSection === 'activity' && <div className="v5-card p-5 text-xs text-slate-500">Recent paid route activity is available in the Payments section.</div>}
+            {financeSection === 'routes' && <div className="v5-card p-5 text-xs text-slate-500">Active x402 provider routes: cheapest, balanced, and fastest.</div>}
+            {financeSection === 'overview' && <>
             {/* Getting Started Box */}
             <div className="agentpay-setup-card bg-white border border-[#eaeaea] rounded-xl p-5 flex items-center justify-between shadow-sm">
               <div className="space-y-1">
@@ -473,6 +479,7 @@ export default function ConsolePage() {
                 </div>
               </div>
             </div>
+            </>}
 
             {/* Split Metrics Grids */}
             <div className="grid md:grid-cols-2 gap-6">
