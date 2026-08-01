@@ -128,9 +128,11 @@ Content-Type: application/json
 }
 ~~~
 
-The first request receives the normal x402 `402 Payment Required` challenge. An agent signs the returned Algorand USDC payment payload with its own wallet and retries with the x402 payment header. Its AgentPay key identifies the agent and applies its saved routing preference and maximum provider price; it never bypasses x402 payment.
+The first request receives the normal x402 `402 Payment Required` challenge. An agent signs the returned Algorand USDC payment payload with its own wallet and retries with the x402 payment header. Its AgentPay key identifies the agent and applies its saved routing preference, maximum provider price, and 24-hour budget; it never bypasses x402 payment. Budget checks occur before a payment challenge is issued.
 
 `GET /v1/models` returns the currently available AgentPay routes for an authenticated agent. Streaming is intentionally not enabled in this prototype.
+
+Agent control-plane endpoints include `PATCH /api/agents/:id` for preference and budget updates, `GET /api/agents/:id/runs` for agent-specific settlement telemetry, and `DELETE /api/agents/:agentId/keys/:keyId` to revoke a key.
 
 The bundled `npm run agent:demo` script uses this gateway automatically when both `AGENTPAY_API_KEY` and `AGENT_MNEMONIC` are set. Use `AGENTPAY_URL=https://YOUR_RENDER_URL/v1/chat/completions` for the deployed API.
 

@@ -76,4 +76,22 @@ export const transactionLedger = {
     writeRecords([record, ...readRecords()])
     return record
   },
+  async listForAgent(agentId: string, limit = 50): Promise<TransactionRecord[]> {
+    if (!db) return readRecords().filter(record => record.agentId === agentId).slice(0, Math.min(Math.max(limit, 1), maxRecords))
+    const safeLimit = Math.min(Math.max(limit, 1), maxRecords)
+    const result = await db.query(`
+      select id, created_at as "createdAt", status, provider_id as "providerId",
+        provider_name as "providerName", preference, prompt_preview as "promptPreview",
+        inbound_payment_reference as "inboundPaymentReference",
+        downstream_payment_tx as "downstreamPaymentTx",
+        provider_cost as "providerCost", latency_ms as "latencyMs", error, agent_id as "agentId"
+      from routing_transactions where agent_id = $1 order by created_at desc limit $2
+    `, [agentId, safeLimit])
+    return result.rows.map(row => ({ ...row, providerCost: row.providerCost === null ? undefined : Number(row.providerCost) })) as TransactionRecord[]
+  },
+  async spendLast24Hours(agentId: string): Promise<number> {
+    if (!db) return readRecords().filter(record => record.agentId === agentId && record.status === 'success' && Date.parse(record.createdAt) > Date.now() - 86_400_000).reduce((sum, record) => sum + (record.providerCost || 0), 0)
+    const result = await db.query(`select coalesce(sum(provider_cost), 0) as spend from routing_transactions where agent_id = $1 and status = 'success' and created_at >= now() - interval '24 hours'`, [agentId])
+    return Number(result.rows[0]?.spend || 0)
+  },
 }

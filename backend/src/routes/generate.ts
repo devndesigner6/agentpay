@@ -84,6 +84,7 @@ export type RouteInput = {
   minAvailability?: number
   inboundPaymentReference?: string
   agentId?: string
+  dailyBudget?: number
 }
 
 function validPrompt(value: unknown): value is string {
@@ -154,9 +155,36 @@ export async function runRoute(input: RouteInput): Promise<GenerateResponse> {
   if (!downstream) throw new Error(`Missing payment configuration for ${provider.id}`)
   if (!downstream.address) throw new Error('Selected provider is not configured for payment settlement')
 
+  if (input.agentId && input.dailyBudget !== undefined) {
+    const spent = await transactionLedger.spendLast24Hours(input.agentId)
+    const projected = spent + config.router.fee
+    if (projected > input.dailyBudget) {
+      await transactionLedger.append({
+        id: crypto.randomUUID(), createdAt: new Date().toISOString(), status: 'failed',
+        providerId: provider.id, providerName: provider.name, preference: input.prefer,
+        providerCost: 0, agentId: input.agentId,
+        error: `Daily budget exceeded: $${projected.toFixed(3)} projected against $${input.dailyBudget.toFixed(3)} limit`,
+      })
+      throw new Error(`Daily agent budget exceeded ($${input.dailyBudget.toFixed(2)} limit)`)
+    }
+  }
+
   const startedAt = Date.now()
   const providerUrl = downstream.url || `${config.router.internalBaseUrl}/api/providers/${downstream.endpoint}/generate`
-  const providerResponse = await callPaidProvider(providerUrl, input.prompt.trim())
+  let providerResponse: { result: string; transaction: string }
+  try {
+    providerResponse = await callPaidProvider(providerUrl, input.prompt.trim())
+  } catch (error) {
+    const latency = Date.now() - startedAt
+    providerRegistry.updateStats(provider.id, latency, false)
+    await transactionLedger.append({
+      id: crypto.randomUUID(), createdAt: new Date().toISOString(), status: 'failed',
+      providerId: provider.id, providerName: provider.name, preference: input.prefer,
+      providerCost: 0, latencyMs: latency, agentId: input.agentId,
+      error: error instanceof Error ? error.message : 'Provider routing failed',
+    })
+    throw error
+  }
   const latency = Date.now() - startedAt
   providerRegistry.updateStats(provider.id, latency, true)
 
