@@ -132,6 +132,8 @@ The first request receives the normal x402 `402 Payment Required` challenge. An 
 
 `GET /v1/models` returns the currently available AgentPay routes for an authenticated agent. Streaming is intentionally not enabled in this prototype.
 
+The bundled `npm run agent:demo` script uses this gateway automatically when both `AGENTPAY_API_KEY` and `AGENT_MNEMONIC` are set. Use `AGENTPAY_URL=https://YOUR_RENDER_URL/v1/chat/completions` for the deployed API.
+
 ## Configure external providers
 
 AgentPay includes cheap, balanced, and premium provider adapters for local testing. To use independently deployed providers, configure their x402-protected endpoints:
