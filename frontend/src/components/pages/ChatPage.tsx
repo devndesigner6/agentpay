@@ -98,7 +98,7 @@ export default function ChatPage() {
         setPaymentRequirements(payReq)
         setPaymentStep('required')
       } else {
-        const errMsg = error.response?.data?.error || error.message || 'Routing error occurred'
+        const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || 'Routing error occurred'
         addChatMessage({
           id: Math.random().toString(),
           role: 'system',

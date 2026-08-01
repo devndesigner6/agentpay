@@ -81,7 +81,7 @@ export default function Hero() {
         setPaymentRequirements(payReq)
         setPaymentStep('required')
       } else {
-        const errMsg = error.response?.data?.error || error.message || 'Unknown error'
+        const errMsg = error.response?.data?.message || error.response?.data?.error || error.message || 'Unknown error'
         addLog(`❌ Error: ${errMsg}`)
         setPaymentStep('error')
       }

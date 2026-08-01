@@ -100,12 +100,21 @@ async function callPaidProvider(url: string, prompt: string): Promise<{ result: 
   const paymentClient = createRouterPaymentClient()
   const paymentRequired = paymentClient.getPaymentRequiredResponse(name => initial.headers[name.toLowerCase()], initial.data)
   const paymentPayload = await paymentClient.createPaymentPayload(paymentRequired)
-  const settled = await axios.post<{ result: string }>(url, { prompt }, {
+  const settled = await axios.post<{ result?: string; error?: string; message?: string }>(url, { prompt }, {
     headers: { ...paymentClient.encodePaymentSignatureHeader(paymentPayload), 'Content-Type': 'application/json' },
     timeout: 30_000,
+    validateStatus: () => true,
   })
+  if (settled.status < 200 || settled.status >= 300) {
+    const body = settled.data
+    const detail = typeof body === 'object' && body
+      ? body.message || body.error
+      : undefined
+    throw new Error(`Provider payment request failed (HTTP ${settled.status})${detail ? `: ${detail}` : ''}`)
+  }
   const receipt = paymentClient.getPaymentSettleResponse(name => settled.headers[name.toLowerCase()])
   if (!receipt.success) throw new Error(receipt.errorMessage || receipt.errorReason || 'Provider payment did not settle')
+  if (!settled.data.result) throw new Error('Provider returned no model result after payment settlement')
   return { result: settled.data.result, transaction: receipt.transaction }
 }
 
