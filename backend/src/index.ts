@@ -9,6 +9,7 @@ import transactionsRoutes from './routes/transactions.js'
 import { initializeX402 } from './payments/x402_client.js'
 import agentsRoutes from './routes/agents.js'
 import { initializeDatabase } from './store/db.js'
+import agentGatewayRoutes from './routes/agent-gateway.js'
 
 const app = express()
 
@@ -54,6 +55,7 @@ app.use('/api', statsRoutes)
 app.use('/api', providersRoutes)
 app.use('/api', transactionsRoutes)
 app.use('/api', agentsRoutes)
+app.use('/v1', agentGatewayRoutes)
 
 // 404 handler
 app.use((req, res) => {

@@ -39,7 +39,7 @@ interface TransactionRecord {
 }
 
 export default function ConsolePage() {
-  const { stats, fetchStats, connectedWallet, setPage } = useStore()
+  const { stats, fetchStats, setPage } = useStore()
   const [activeTab, setActiveTab] = useState<'overview' | 'gateway' | 'keys' | 'models' | 'policies' | 'logs' | 'account'>('overview')
   const [financeSection, setFinanceSection] = useState('overview')
 
@@ -66,19 +66,8 @@ export default function ConsolePage() {
   const [showWorkspaceMenu, setShowWorkspaceMenu] = useState(false)
   const [showNewMenu, setShowNewMenu] = useState(false)
 
-  // Local state for generated virtual agent keys
-  const [keysList, setKeysList] = useState<AgentKey[]>([
-    {
-      id: 'default-agent-1',
-      name: 'Support Bot',
-      key: 'ap_live_4f4e2c185b2a4d0e9c6f2a7b',
-      wallet: connectedWallet?.address || '25-word wallet account address',
-      created: new Date().toISOString().split('T')[0],
-      description: 'Handles customer support questions and routes escalations.',
-      environment: 'Production',
-      type: 'AI Agent'
-    }
-  ])
+  const [keysList, setKeysList] = useState<AgentKey[]>([])
+  const [agentCreateError, setAgentCreateError] = useState<string | null>(null)
 
   // Local state for registered Provider master keys
   const [providerKeys, setProviderKeys] = useState<ProviderKey[]>([
@@ -126,6 +115,18 @@ export default function ConsolePage() {
     axios.get<{ transactions: TransactionRecord[] }>(`${API_BASE_URL}/transactions`)
       .then(response => setRunLogs(response.data.transactions))
       .catch(error => console.error('Failed to fetch transaction history:', error))
+    axios.get<{ agents: Array<{ id: string; name: string; description?: string; created_at: string }> }>(`${API_BASE_URL}/agents`)
+      .then(response => setKeysList(response.data.agents.map(agent => ({
+        id: agent.id,
+        name: agent.name,
+        key: 'Stored securely',
+        wallet: 'Signer wallet required',
+        created: agent.created_at,
+        description: agent.description,
+        environment: 'Production',
+        type: 'AI Agent',
+      }))))
+      .catch(error => console.error('Failed to load agents:', error))
   }, [])
 
   // Action: Add Provider Key (Form Submit)
@@ -175,30 +176,37 @@ export default function ConsolePage() {
   }
 
   // Action: Create Agent (Form Submit)
-  const handleCreateAgentSubmit = (e: React.FormEvent) => {
+  const handleCreateAgentSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!agentName) return
-
-    const randomHex = Array.from({ length: 24 }, () => Math.floor(Math.random() * 16).toString(16)).join('')
-    const newAgent: AgentKey = {
-      id: agentId || Date.now().toString(),
-      name: agentName,
-      key: `ap_live_${randomHex}`,
-      wallet: connectedWallet?.address || '25-word wallet account address',
-      created: new Date().toISOString().split('T')[0],
-      description: agentDescription,
-      environment: agentEnvironment,
-      type: agentType
+    setAgentCreateError(null)
+    try {
+      const response = await axios.post<{ agent: { id: string; name: string; description?: string }; api_key: string }>(`${API_BASE_URL}/agents`, {
+        name: agentName,
+        description: agentDescription,
+        preference: 'cheapest',
+        max_price: 0.03,
+      })
+      const newAgent: AgentKey = {
+        id: response.data.agent.id,
+        name: response.data.agent.name,
+        key: response.data.api_key,
+        wallet: 'Signer wallet required',
+        created: new Date().toISOString(),
+        description: response.data.agent.description,
+        environment: agentEnvironment,
+        type: agentType,
+      }
+      setKeysList(prev => [newAgent, ...prev])
+      setShowCreateAgent(false)
+      setAgentName('')
+      setAgentDescription('')
+      setAgentEnvironment('Production')
+      setAgentType('AI Agent')
+    } catch (error) {
+      const message = axios.isAxiosError(error) ? error.response?.data?.error : undefined
+      setAgentCreateError(typeof message === 'string' ? message : 'Could not create the agent. Check the backend database configuration.')
     }
-
-    setKeysList((prev) => [...prev, newAgent])
-    setShowCreateAgent(false)
-
-    // Clear form states
-    setAgentName('')
-    setAgentDescription('')
-    setAgentEnvironment('Production')
-    setAgentType('AI Agent')
   }
 
   const handleDeleteKey = (id: string) => {
@@ -1186,6 +1194,7 @@ export default function ConsolePage() {
             </div>
 
             <form onSubmit={handleCreateAgentSubmit} className="space-y-4">
+              {agentCreateError && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{agentCreateError}</p>}
               <div>
                 <label className="v5-label block mb-2">Agent Type *</label>
                 <div className="grid grid-cols-2 gap-3">

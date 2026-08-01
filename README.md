@@ -113,6 +113,25 @@ npm run agent:demo
 
 Set AGENT_MNEMONIC in backend/.env to a separately funded Testnet account. Keep the client wallet separate from the router wallet. Each payer and recipient must be opted into Testnet USDC ASA 10458941, and payer accounts need Testnet ALGO and USDC.
 
+### OpenAI-compatible agent gateway
+
+Create an AgentPay agent with `POST /api/agents`. The response returns an `ap_live_...` key exactly once; AgentPay stores only its SHA-256 hash. Use that key as a bearer token with the OpenAI-compatible gateway:
+
+~~~http
+POST /v1/chat/completions
+Authorization: Bearer ap_live_...
+Content-Type: application/json
+
+{
+  "model": "agentpay/auto",
+  "messages": [{ "role": "user", "content": "Summarise Algorand x402." }]
+}
+~~~
+
+The first request receives the normal x402 `402 Payment Required` challenge. An agent signs the returned Algorand USDC payment payload with its own wallet and retries with the x402 payment header. Its AgentPay key identifies the agent and applies its saved routing preference and maximum provider price; it never bypasses x402 payment.
+
+`GET /v1/models` returns the currently available AgentPay routes for an authenticated agent. Streaming is intentionally not enabled in this prototype.
+
 ## Configure external providers
 
 AgentPay includes cheap, balanced, and premium provider adapters for local testing. To use independently deployed providers, configure their x402-protected endpoints:

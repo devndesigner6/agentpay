@@ -16,6 +16,7 @@ export type TransactionRecord = {
   providerCost?: number
   latencyMs?: number
   error?: string
+  agentId?: string
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -46,7 +47,7 @@ export const transactionLedger = {
         provider_name as "providerName", preference, prompt_preview as "promptPreview",
         inbound_payment_reference as "inboundPaymentReference",
         downstream_payment_tx as "downstreamPaymentTx",
-        provider_cost as "providerCost", latency_ms as "latencyMs", error
+        provider_cost as "providerCost", latency_ms as "latencyMs", error, agent_id as "agentId"
       from routing_transactions
       order by created_at desc
       limit $1
@@ -62,13 +63,13 @@ export const transactionLedger = {
       await db.query(`
         insert into routing_transactions (
           id, created_at, status, provider_id, provider_name, preference, prompt_preview,
-          inbound_payment_reference, downstream_payment_tx, provider_cost, latency_ms, error
-        ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+          inbound_payment_reference, downstream_payment_tx, provider_cost, latency_ms, error, agent_id
+        ) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       `, [
         record.id, record.createdAt, record.status, record.providerId ?? null,
         record.providerName ?? null, record.preference ?? null, record.promptPreview ?? null,
         record.inboundPaymentReference ?? null, record.downstreamPaymentTx ?? null,
-        record.providerCost ?? null, record.latencyMs ?? null, record.error ?? null,
+        record.providerCost ?? null, record.latencyMs ?? null, record.error ?? null, record.agentId ?? null,
       ])
       return record
     }

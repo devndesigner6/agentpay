@@ -77,6 +77,15 @@ function paymentReceiptFromHeader(header: string | undefined): string {
   }
 }
 
+export type RouteInput = {
+  prompt: string
+  prefer: 'cheapest' | 'fastest' | 'reliable'
+  maxPrice?: number
+  minAvailability?: number
+  inboundPaymentReference?: string
+  agentId?: string
+}
+
 function validPrompt(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0 && value.length <= 12000
 }
@@ -133,6 +142,49 @@ async function callPaidProvider(url: string, prompt: string): Promise<{ result: 
   return { result: settled.data.result, transaction: receipt.transaction }
 }
 
+export async function runRoute(input: RouteInput): Promise<GenerateResponse> {
+  const provider = decisionEngine.selectProvider({
+    prefer: input.prefer,
+    maxPrice: input.maxPrice,
+    minAvailability: input.minAvailability,
+  })
+  if (!provider) throw new Error('No provider matches the requested routing constraints')
+
+  const downstream = providers[provider.id]
+  if (!downstream) throw new Error(`Missing payment configuration for ${provider.id}`)
+  if (!downstream.address) throw new Error('Selected provider is not configured for payment settlement')
+
+  const startedAt = Date.now()
+  const providerUrl = downstream.url || `${config.router.internalBaseUrl}/api/providers/${downstream.endpoint}/generate`
+  const providerResponse = await callPaidProvider(providerUrl, input.prompt.trim())
+  const latency = Date.now() - startedAt
+  providerRegistry.updateStats(provider.id, latency, true)
+
+  const response: GenerateResponse = {
+    success: true,
+    result: providerResponse.result,
+    provider: provider.name,
+    price_paid: `$${provider.pricePerRequest.toFixed(3)}`,
+    latency_ms: latency,
+    payment_tx: input.inboundPaymentReference || 'settled-by-facilitator',
+    provider_payment_tx: providerResponse.transaction,
+  }
+  await transactionLedger.append({
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+    status: 'success',
+    providerId: provider.id,
+    providerName: provider.name,
+    preference: input.prefer,
+    inboundPaymentReference: response.payment_tx,
+    downstreamPaymentTx: response.provider_payment_tx,
+    providerCost: provider.pricePerRequest,
+    latencyMs: latency,
+    agentId: input.agentId,
+  })
+  return response
+}
+
 router.post('/generate', paymentMiddleware(x402Routes, resourceServer), async (req: Request, res: Response) => {
   try {
     const body = req.body as Partial<GenerateRequest>
@@ -142,43 +194,12 @@ router.post('/generate', paymentMiddleware(x402Routes, resourceServer), async (r
     }
 
     const maxPrice = body.max_price ? Number.parseFloat(body.max_price.replace('$', '')) : undefined
-    const provider = decisionEngine.selectProvider({
+    const response = await runRoute({
+      prompt: body.prompt.trim(),
       prefer: body.prefer || 'cheapest',
       maxPrice: Number.isFinite(maxPrice) ? maxPrice : undefined,
       minAvailability: body.min_availability,
-    })
-    if (!provider) return res.status(503).json({ error: 'No provider matches the requested routing constraints' })
-
-    const downstream = providers[provider.id]
-    if (!downstream) return res.status(500).json({ error: `Missing payment configuration for ${provider.id}` })
-
-    const startedAt = Date.now()
-    if (!downstream.address) return res.status(503).json({ error: 'Selected provider is not configured for payment settlement' })
-    const providerUrl = downstream.url || `${config.router.internalBaseUrl}/api/providers/${downstream.endpoint}/generate`
-    const providerResponse = await callPaidProvider(providerUrl, body.prompt.trim())
-
-    const latency = Date.now() - startedAt
-    providerRegistry.updateStats(provider.id, latency, true)
-    const response: GenerateResponse = {
-      success: true,
-      result: providerResponse.result,
-      provider: provider.name,
-      price_paid: `$${provider.pricePerRequest.toFixed(3)}`,
-      latency_ms: latency,
-      payment_tx: paymentReceiptFromHeader(req.header('x-payment')),
-      provider_payment_tx: providerResponse.transaction,
-    }
-    await transactionLedger.append({
-      id: crypto.randomUUID(),
-      createdAt: new Date().toISOString(),
-      status: 'success',
-      providerId: provider.id,
-      providerName: provider.name,
-      preference: body.prefer || 'cheapest',
-      inboundPaymentReference: response.payment_tx,
-      downstreamPaymentTx: response.provider_payment_tx,
-      providerCost: provider.pricePerRequest,
-      latencyMs: latency,
+      inboundPaymentReference: paymentReceiptFromHeader(req.header('x-payment')),
     })
     return res.json(response)
   } catch (error: unknown) {

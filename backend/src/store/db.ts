@@ -21,6 +21,7 @@ export async function initializeDatabase() {
     latency_ms integer,
     error text
   )`)
+  await db.query('alter table routing_transactions add column if not exists agent_id uuid references agents(id) on delete set null')
   await db.query('create index if not exists routing_transactions_created_at_idx on routing_transactions (created_at desc)')
   return true
 }
